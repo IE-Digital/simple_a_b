@@ -1,0 +1,73 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the simple_a_b module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function simple_a_b_schema() {
+  $schema['simple_a_b_tests'] = [
+    'description' => 'Stores active and inactive tests.',
+    'fields' => [
+      'tid' => [
+        'description' => 'Primary key for each test',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'name' => [
+        'description' => 'Name of the test',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'description' => [
+        'description' => 'Description of the test',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'enabled' => [
+        'description' => 'A boolean to state if the tests is enabled',
+        'type' => 'int',
+        'length' => 1,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'type' => [
+        'description' => 'The type of A/B test',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'created_by' => [
+        'description' => 'The uid of the user who created the test',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'created' => [
+        'description' => 'Timestamp when the test was created.',
+        'type' => 'int',
+        'length' => 11,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'updated' => [
+        'description' => 'Timestamp when the test was updated.',
+        'type' => 'int',
+        'length' => 11,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['tid'],
+  ];
+  return $schema;
+}
