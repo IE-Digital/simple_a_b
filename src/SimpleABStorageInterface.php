@@ -23,6 +23,16 @@ interface SimpleABStorageInterface {
    */
   public function update($tid, $data);
 
+
+  /**
+   * Pull a test from the database
+   *
+   * @param $tid
+   *
+   * @return mixed
+   */
+  public function fetch($tid);
+
   /**
    * Remove a test from the database
    *
@@ -31,5 +41,6 @@ interface SimpleABStorageInterface {
    * @return mixed
    */
   public function remove($tid);
+
 
 }
