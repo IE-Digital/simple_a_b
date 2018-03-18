@@ -1,0 +1,4 @@
+services:
+  simple_a_b.storage.test:
+    class: Drupal\simple_a_b\SimpleABDatabaseStorage
+    arguments: ['@database', '@state', '@request_stack']

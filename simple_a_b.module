@@ -21,6 +21,7 @@ function simple_a_b_help($route_name, RouteMatchInterface $route_match) {
  */
 function simple_a_b_views_data() {
 
+  // create data structure so views api knows what to look for
   $data['simple_a_b_tests']['table'] = [
     'group' => t('Simple A/B tests'),
     'provider' => 'simple_a_b',
@@ -32,6 +33,7 @@ function simple_a_b_views_data() {
     ],
   ];
 
+  // show that there is a join between created by and users data
   $data['simple_a_b_tests']['table']['join'] = [
     'users_field_data' => [
       'left_field' => 'uid',
@@ -39,6 +41,15 @@ function simple_a_b_views_data() {
     ],
   ];
 
+  // show that there is a join between updated by and users data
+  $data['simple_a_b_tests']['table']['join'] = [
+    'users_field_data' => [
+      'left_field' => 'uid',
+      'field' => 'updated_by',
+    ],
+  ];
+
+  // test id
   $data['simple_a_b_tests']['tid'] = [
     'title' => t('Id'),
     'help' => t('The id that created the test'),
@@ -56,6 +67,7 @@ function simple_a_b_views_data() {
     ],
   ];
 
+  // test name
   $data['simple_a_b_tests']['name'] = [
     'title' => t('Name'),
     'help' => t('Name of the test'),
@@ -73,6 +85,7 @@ function simple_a_b_views_data() {
     ],
   ];
 
+  // test description
   $data['simple_a_b_tests']['description'] = [
     'title' => t('Description'),
     'help' => t('Description of the test'),
@@ -90,6 +103,7 @@ function simple_a_b_views_data() {
     ],
   ];
 
+  // test enabled
   $data['simple_a_b_tests']['enabled'] = [
     'title' => t('Enabled'),
     'help' => t('Flag for the state of the test'),
@@ -107,6 +121,7 @@ function simple_a_b_views_data() {
     ],
   ];
 
+  // test type
   $data['simple_a_b_tests']['type'] = [
     'title' => t('Type'),
     'help' => t('Type of the test'),
@@ -124,6 +139,25 @@ function simple_a_b_views_data() {
     ],
   ];
 
+  // entity id
+  $data['simple_a_b_tests']['eid'] = [
+    'title' => t('Entity id'),
+    'help' => t('The id of the entity this test relates too'),
+    'field' => [
+      'id' => 'numeric',
+    ],
+    'sort' => [
+      'id' => 'standard',
+    ],
+    'filter' => [
+      'id' => 'numeric',
+    ],
+    'argument' => [
+      'id' => 'numeric',
+    ],
+  ];
+
+  // test created by
   $data['simple_a_b_tests']['created_by'] = [
     'title' => t('Created by'),
     'help' => t('The user that created the test'),
@@ -140,14 +174,15 @@ function simple_a_b_views_data() {
       'id' => 'numeric',
     ],
     'relationship' => [
-      'title' => t('User'),
-      'help' => t(''),
+      'title' => t('Created by user'),
+      'help' => t('The user that first created the test'),
       'base' => 'users_field_data',
       'base field' => 'uid',
       'id' => 'standard',
     ],
   ];
 
+  // test created time
   $data['simple_a_b_tests']['created'] = [
     'title' => t('Created'),
     'help' => t('When the test was created'),
@@ -162,6 +197,32 @@ function simple_a_b_views_data() {
     ],
   ];
 
+  // test updated by
+  $data['simple_a_b_tests']['updated_by'] = [
+    'title' => t('Updated by'),
+    'help' => t('The user that last updated the test'),
+    'field' => [
+      'id' => 'numeric',
+    ],
+    'sort' => [
+      'id' => 'standard',
+    ],
+    'filter' => [
+      'id' => 'numeric',
+    ],
+    'argument' => [
+      'id' => 'numeric',
+    ],
+    'relationship' => [
+      'title' => t('Updated by user'),
+      'help' => t('The user that last updated the test'),
+      'base' => 'users_field_data',
+      'base field' => 'uid',
+      'id' => 'standard',
+    ],
+  ];
+
+  // test updated time
   $data['simple_a_b_tests']['updated'] = [
     'title' => t('Updated'),
     'help' => t('When the test was updated'),

@@ -46,8 +46,14 @@ function simple_a_b_schema() {
         'not null' => TRUE,
         'default' => '',
       ],
+      'eid' => [
+        'description' => 'The entity id for the entity',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
       'created_by' => [
-        'description' => 'The uid of the user who created the test',
+        'description' => 'The user id of the user who created the test',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
@@ -56,6 +62,12 @@ function simple_a_b_schema() {
         'description' => 'Timestamp when the test was created.',
         'type' => 'int',
         'length' => 11,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'updated_by' => [
+        'description' => 'The user id of the user who updated the test',
+        'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
       ],
