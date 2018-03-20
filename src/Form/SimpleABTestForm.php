@@ -3,9 +3,12 @@
 namespace Drupal\simple_a_b\Form;
 
 use Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\simple_a_b\SimpleABTypeManger;
 
 class SimpleABTestForm extends FormBase {
 
@@ -45,7 +48,7 @@ class SimpleABTestForm extends FormBase {
 
     // if we have a tid & the data returned is empty
     // we should stop the form and display an error message
-    if($tid !== NULL && empty($loaded_test)){
+    if ($tid !== NULL && empty($loaded_test)) {
 
       $messenger = \Drupal::messenger();
       $messenger->addMessage(t('No test could be found'), 'error');
@@ -86,20 +89,20 @@ class SimpleABTestForm extends FormBase {
       '#options' => $this->getTypes(),
       '#description' => t('What type of entity to test'),
       '#required' => TRUE,
-      //      '#ajax' => [
-      //        // Function to call when event on form element triggered.
-      //        'callback' => '::enable_event_trigger',
-      //        // Effect when replacing content. Options: 'none' (default), 'slide', 'fade'.
-      //        'effect' => 'fade',
-      //        // Javascript event to trigger Ajax. Currently for: 'onchange'.
-      //        'event' => 'click',
-      //        'progress' => [
-      //          // Graphic shown to indicate ajax. Options: 'throbber' (default), 'bar'.
-      //          'type' => 'throbber',
-      //          // Message to show along progress graphic. Default: 'Please wait...'.
-      //          'message' => 'loading',
-      //        ],
-      //      ],
+      '#ajax' => [
+        // Function to call when event on form element triggered.
+        'callback' => '::loadCorrectEntityAutoComplete',
+        // Effect when replacing content. Options: 'none' (default), 'slide', 'fade'.
+        'effect' => 'fade',
+        // Javascript event to trigger Ajax. Currently for: 'onchange'.
+        'event' => 'click',
+        'progress' => [
+          // Graphic shown to indicate ajax. Options: 'throbber' (default), 'bar'.
+          'type' => 'throbber',
+          // Message to show along progress graphic. Default: 'Please wait...'.
+          'message' => 'loading',
+        ],
+      ],
     ];
 
     // test entity id
@@ -109,6 +112,9 @@ class SimpleABTestForm extends FormBase {
       '#description' => t('The entity to apply the tests too'),
       '#default_value' => BlockContent::load($this->_isset($loaded_test['eid'], 0)),
       '#required' => TRUE,
+      '#attributes' => [
+        'id' => ['edit-output'],
+      ],
     ];
 
     // test enabled status
@@ -278,6 +284,31 @@ class SimpleABTestForm extends FormBase {
     }
   }
 
+
+  /**
+   * Loads in the collect entity selector based upon the type selected
+   *
+   * @param array $form
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   */
+  public function loadCorrectEntityAutoComplete(array &$form, FormStateInterface $form_state) {
+    $elem = [
+      '#type' => 'textfield',
+      '#size' => '60',
+      '#disabled' => TRUE,
+      '#value' => 'Hello, ' . $form_state->getValue($this->_fieldTestPrepend . 'type') . '!',
+      '#attributes' => [
+        'id' => ['edit-output'],
+      ],
+    ];
+    $renderer = \Drupal::service('renderer');
+    $response = new AjaxResponse();
+    $response->addCommand(new ReplaceCommand('#edit-output', $renderer->render($elem)));
+    return $response;
+  }
+
   /**
    * load a tests information used for amending edits
    *
@@ -310,11 +341,30 @@ class SimpleABTestForm extends FormBase {
     return $output;
   }
 
+  /**
+   * Using the plugin manger looks
+   * for any test types
+   *
+   * @return array
+   */
   protected function getTypes() {
-    return [
-      '_none' => t('- none -'),
-      'block_custom' => t('Custom Block'),
-    ];
+    $output = [];
+    // default of none
+    $output['_none'] = t('- none -');
+
+    $manager = \Drupal::service('plugin.manager.simpleab.type');
+    $plugins = $manager->getDefinitions();
+
+    // if we have some plugsin
+    // lets loop though them to create a drop down list of items
+    if (!empty($plugins)) {
+      foreach ($plugins as $test) {
+        $instance = $manager->createInstance($test['id']);
+        $output[$instance->getId()] = $instance->getName();
+      }
+    }
+
+    return $output;
   }
 
   /**

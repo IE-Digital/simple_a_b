@@ -5,3 +5,6 @@ services:
   simple_a_b.storage.data:
     class: Drupal\simple_a_b\SimpleABDatabaseData
     arguments: ['@database', '@state', '@request_stack']
+  plugin.manager.simpleab.type:
+    class: Drupal\simple_a_b\SimpleABTypeManger
+    parent: default_plugin_manager
