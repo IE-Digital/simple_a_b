@@ -27,11 +27,18 @@ interface SimpleABTypeInterface extends PluginInspectionInterface {
    */
   public function getName();
 
-
   /**
-   * Loads the correct select options
+   * returns the entity type
    *
    * @return mixed
    */
-  public function loadSelectOptions();
+  public function getEntityType();
+
+
+  /**
+   * returns the entity description
+   *
+   * @return mixed
+   */
+  public function getEntityDescription();
 }

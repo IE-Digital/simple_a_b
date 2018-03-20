@@ -43,7 +43,7 @@ class SimpleABTestForm extends FormBase {
 
     // try to load the tid
     // this is used for if we are using the form in edit mode
-    $loaded_test = $this->loadTestData($tid);
+    $loaded_test = static::loadTestData($tid);
     $edit_mode = isset($loaded_test['name']) ? TRUE : FALSE;
 
     // if we have a tid & the data returned is empty
@@ -54,6 +54,13 @@ class SimpleABTestForm extends FormBase {
       $messenger->addMessage(t('No test could be found'), 'error');
 
       return $form;
+    }
+
+    if (empty($form_state->getValue($this->_fieldTestPrepend . 'type'))) {
+      $test_type = $this->_isset($loaded_test['type']);
+    }
+    else {
+      $test_type = $form_state->getValue($this->_fieldTestPrepend . 'type');
     }
 
     // test details
@@ -85,36 +92,37 @@ class SimpleABTestForm extends FormBase {
     $form['test'][$this->_fieldTestPrepend . 'type'] = [
       '#type' => 'select',
       '#title' => t('Type'),
-      '#default_value' => $this->_isset($loaded_test['type']),
-      '#options' => $this->getTypes(),
+      '#default_value' => $test_type,
+      '#options' => static::getTypes(),
       '#description' => t('What type of entity to test'),
       '#required' => TRUE,
       '#ajax' => [
-        // Function to call when event on form element triggered.
         'callback' => '::loadCorrectEntityAutoComplete',
-        // Effect when replacing content. Options: 'none' (default), 'slide', 'fade'.
         'effect' => 'fade',
-        // Javascript event to trigger Ajax. Currently for: 'onchange'.
-        'event' => 'click',
+        'event' => 'change  ',
+        'wrapper' => 'test-field-eid-container',
         'progress' => [
-          // Graphic shown to indicate ajax. Options: 'throbber' (default), 'bar'.
           'type' => 'throbber',
-          // Message to show along progress graphic. Default: 'Please wait...'.
           'message' => 'loading',
         ],
       ],
     ];
 
+    // the eid container
+    $form['test'][$this->_fieldTestPrepend . 'eid_container'] = [
+      '#type' => 'container',
+      '#attributes' => ['id' => 'test-field-eid-container'],
+    ];
+
     // test entity id
-    $form['test'][$this->_fieldTestPrepend . 'eid'] = [
+    $form['test'][$this->_fieldTestPrepend . 'eid_container'][$this->_fieldTestPrepend . 'eid'] = [
       '#type' => 'entity_autocomplete',
-      '#target_type' => 'block_content',
-      '#description' => t('The entity to apply the tests too'),
+      '#title' => t('Entity'),
+      '#target_type' => static::getEntityType($test_type),
+      '#description' => static::getEntityDescription($test_type),
       '#default_value' => BlockContent::load($this->_isset($loaded_test['eid'], 0)),
+      '#disabled' => static::getEntityDisabledState($test_type),
       '#required' => TRUE,
-      '#attributes' => [
-        'id' => ['edit-output'],
-      ],
     ];
 
     // test enabled status
@@ -291,22 +299,10 @@ class SimpleABTestForm extends FormBase {
    * @param array $form
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *
-   * @return \Drupal\Core\Ajax\AjaxResponse
+   * @return mixed
    */
   public function loadCorrectEntityAutoComplete(array &$form, FormStateInterface $form_state) {
-    $elem = [
-      '#type' => 'textfield',
-      '#size' => '60',
-      '#disabled' => TRUE,
-      '#value' => 'Hello, ' . $form_state->getValue($this->_fieldTestPrepend . 'type') . '!',
-      '#attributes' => [
-        'id' => ['edit-output'],
-      ],
-    ];
-    $renderer = \Drupal::service('renderer');
-    $response = new AjaxResponse();
-    $response->addCommand(new ReplaceCommand('#edit-output', $renderer->render($elem)));
-    return $response;
+    return $form['test'][$this->_fieldTestPrepend . 'eid_container'];
   }
 
   /**
@@ -316,7 +312,7 @@ class SimpleABTestForm extends FormBase {
    *
    * @return array
    */
-  protected function loadTestData($tid = NULL) {
+  protected static function loadTestData($tid = NULL) {
     $output = [];
 
     // if there is no tid
@@ -347,7 +343,7 @@ class SimpleABTestForm extends FormBase {
    *
    * @return array
    */
-  protected function getTypes() {
+  protected static function getTypes() {
     $output = [];
     // default of none
     $output['_none'] = t('- none -');
@@ -366,6 +362,76 @@ class SimpleABTestForm extends FormBase {
 
     return $output;
   }
+
+  /**
+   * returns the selected entity type
+   *
+   * @param $type
+   *
+   * @return string
+   */
+  protected static function getEntityType($type) {
+    $manager = \Drupal::service('plugin.manager.simpleab.type');
+    $plugins = $manager->getDefinitions();
+
+    // loop thought the plugins
+    // to try and find the entity type we want to use
+    if (!empty($plugins)) {
+      foreach ($plugins as $test) {
+        $instance = $manager->createInstance($test['id']);
+        if ($type === $instance->getId()) {
+          return $instance->getEntityType();
+        }
+      }
+    }
+
+    // returns user as default - this should be disabled anyway
+    return 'user';
+  }
+
+  /**
+   * returns the entity description
+   *
+   * @param $type
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   */
+  protected static function getEntityDescription($type) {
+    $manager = \Drupal::service('plugin.manager.simpleab.type');
+    $plugins = $manager->getDefinitions();
+
+    // loop thought the plugins
+    // to try and find the entity type we want to use
+    if (!empty($plugins)) {
+      foreach ($plugins as $test) {
+        $instance = $manager->createInstance($test['id']);
+        if ($type === $instance->getId()) {
+          return $instance->getEntityDescription();
+        }
+      }
+    }
+
+    // returns description
+    return t('No type is selected, please select one');
+  }
+
+  /**
+   * returns if the entity field is disabled or not
+   *
+   * @param $type
+   *
+   * @return bool
+   */
+  protected static function getEntityDisabledState($type) {
+
+    if ($type === "_none" || $type === "") {
+      return TRUE;
+    }
+    else {
+      return FALSE;
+    }
+  }
+
 
   /**
    * A simple wrapper for isset to make it shorter to test

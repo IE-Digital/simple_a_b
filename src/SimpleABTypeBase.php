@@ -29,11 +29,20 @@ class SimpleABTypeBase extends PluginBase implements SimpleABTypeInterface {
   }
 
   /**
-   * Loads the correct select options
+   * returns the entity type
    *
    * @return mixed
    */
-  public function loadSelectOptions() {
-    // TODO: Implement loadSelectOptions() method.
+  public function getEntityType() {
+    return $this->pluginDefinition['entityTargetType'];
+  }
+
+  /**
+   * returns the entity description
+   *
+   * @return mixed
+   */
+  public function getEntityDescription() {
+    return $this->pluginDefinition['entityDescription'];
   }
 }

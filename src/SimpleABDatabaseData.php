@@ -43,7 +43,11 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
     $tid = -1;
 
     try {
+      dpm($data);
+
       $data = $this->formatDataForUpload($data);
+
+      dpm($data);
 
       // try to add the data into the database
       $tid = $this->connection->insert($this->_table)->fields($data)->execute();
@@ -150,13 +154,18 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
       if (!in_array($key, $this->_dontMove)) {
         $output['data'][$key] = $item;
       }
+      else {
+        // remember to keep everything else
+        $output[$key] = $item;
+      }
     }
 
+    // serialise data arrays
     $output['data'] = serialize($output['data']);
     $output['settings'] = serialize($output['settings']);
     $output['conditions'] = serialize($output['conditions']);
 
-
+    // return the new data
     return $output;
   }
 

@@ -36,4 +36,20 @@ class SimpleABType extends Plugin {
    */
   public $name;
 
+
+  /**
+   * The entity target type.
+   *
+   * @var string
+   */
+  public $entityTargetType;
+
+
+  /**
+   * The entity description
+   *
+   * @var string
+   */
+  public $entityDescription;
+
 }

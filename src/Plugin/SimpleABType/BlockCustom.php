@@ -14,6 +14,8 @@ use Drupal\simple_a_b\SimpleABTypeBase;
  * @SimpleABType(
  *   id = "block_custom",
  *   name = @Translation("Custom Block"),
+ *   entityTargetType = "block_content",
+ *   entityDescription = @Translation("Select a custom block to apply tests too")
  * )
  */
 class BlockCustom extends SimpleABTypeBase {
