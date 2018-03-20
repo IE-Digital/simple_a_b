@@ -9,7 +9,9 @@ use Drupal\Core\Url;
 
 class SimpleABTestForm extends FormBase {
 
-  protected $_fieldPrepend = 'test_field_';
+  protected $_fieldTestPrepend = 'test_field_';
+
+  protected $_fieldDataPrepend = 'data_field_';
 
   /**
    * Returns a unique string identifying the form.
@@ -38,9 +40,20 @@ class SimpleABTestForm extends FormBase {
 
     // try to load the tid
     // this is used for if we are using the form in edit mode
-    $loaded_test = $this->loadData($tid);
+    $loaded_test = $this->loadTestData($tid);
     $edit_mode = isset($loaded_test['name']) ? TRUE : FALSE;
 
+    // if we have a tid & the data returned is empty
+    // we should stop the form and display an error message
+    if($tid !== NULL && empty($loaded_test)){
+
+      $messenger = \Drupal::messenger();
+      $messenger->addMessage(t('No test could be found'), 'error');
+
+      return $form;
+    }
+
+    // test details
     $form['test'] = [
       '#type' => 'details',
       '#title' => t('Test information'),
@@ -48,7 +61,8 @@ class SimpleABTestForm extends FormBase {
       '#open' => TRUE,
     ];
 
-    $form['test'][$this->_fieldPrepend . 'name'] = [
+    // test name
+    $form['test'][$this->_fieldTestPrepend . 'name'] = [
       '#type' => 'textfield',
       '#title' => t('Name'),
       '#description' => t('Administrative name'),
@@ -56,14 +70,16 @@ class SimpleABTestForm extends FormBase {
       '#required' => TRUE,
     ];
 
-    $form['test'][$this->_fieldPrepend . 'description'] = [
+    // test description
+    $form['test'][$this->_fieldTestPrepend . 'description'] = [
       '#type' => 'textfield',
       '#title' => t('Description'),
       '#default_value' => $this->_isset($loaded_test['description']),
       '#description' => t('Administrative description'),
     ];
 
-    $form['test'][$this->_fieldPrepend . 'type'] = [
+    // test type
+    $form['test'][$this->_fieldTestPrepend . 'type'] = [
       '#type' => 'select',
       '#title' => t('Type'),
       '#default_value' => $this->_isset($loaded_test['type']),
@@ -86,8 +102,8 @@ class SimpleABTestForm extends FormBase {
       //      ],
     ];
 
-
-    $form['test'][$this->_fieldPrepend . 'eid'] = [
+    // test entity id
+    $form['test'][$this->_fieldTestPrepend . 'eid'] = [
       '#type' => 'entity_autocomplete',
       '#target_type' => 'block_content',
       '#description' => t('The entity to apply the tests too'),
@@ -95,7 +111,8 @@ class SimpleABTestForm extends FormBase {
       '#required' => TRUE,
     ];
 
-    $form['test'][$this->_fieldPrepend . 'enabled'] = [
+    // test enabled status
+    $form['test'][$this->_fieldTestPrepend . 'enabled'] = [
       '#type' => 'radios',
       '#title' => t('Enabled'),
       '#description' => t('Enable or disable this test'),
@@ -107,38 +124,69 @@ class SimpleABTestForm extends FormBase {
       '#required' => TRUE,
     ];
 
-    // hidden flag to check of edit mode
-    $form['edit_mode'] = [
-      '#type' => 'hidden',
-      '#value' => $edit_mode ? 'true' : 'false',
+
+    // data information
+    $form['variations'] = [
+      '#type' => 'details',
+      '#title' => t('Variations'),
+      '#description' => t('Each variation that will be tested against the original, minimum of 1 variation is required.'),
+      '#open' => TRUE,
     ];
 
-    // if in edit mode set the tid to be hidden
-    if ($edit_mode) {
-      $form[$this->_fieldPrepend . 'tid'] = [
-        '#type' => 'hidden',
-        '#value' => $this->_isset($loaded_test['tid']),
-      ];
-    }
+    $form['variations'][$this->_fieldDataPrepend . 'content'] = [
+      '#type' => 'textarea',
+      '#title' => t('Replacement content'),
+      '#description' => t('This will be the content that replaces the original content'),
+      '#default_value' => $this->_isset($loaded_test['content']),
 
+    ];
+
+    // place to hold the actions
     $form['actions'] = ['#type' => 'actions'];
+
+    // submit button
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $edit_mode ? t('Update') : t('Add'),
       '#attributes' => ['class' => ['button--primary']],
     ];
 
-    $form['actions']['preview'] = [
-      '#type' => 'submit',
-      '#value' => t('Preview'),
-    ];
+    //    $form['actions']['preview'] = [
+    //      '#type' => 'submit',
+    //      '#value' => t('Preview'),
+    //    ];
 
+    // it edit mode enabled
     if ($edit_mode) {
+
+      // if we are in edit mode show up the delete button
       $form['actions']['delete'] = [
-        '#markup' => "<a href='/admin/config/user-interface/simple-a-b/".$tid."/delete' class='button button--danger'>".t('Delete')."</a>",
+        '#markup' => "<a href='/admin/config/user-interface/simple-a-b/" . $tid . "/delete' class='button button--danger'>" . t('Delete') . "</a>",
         '#allowed_tags' => ['a'],
       ];
+
+      // hidden field for the tid
+      // this should only be on edit otherwise the database
+      // will try and set the auto_increment tid
+      $form[$this->_fieldTestPrepend . 'tid'] = [
+        '#type' => 'hidden',
+        '#value' => $this->_isset($loaded_test['tid']),
+      ];
+
+      // hidden field for the did
+      // this should only be on edit otherwise the database
+      // will try and set the auto_increment did
+      $form[$this->_fieldDataPrepend . 'did'] = [
+        '#type' => 'hidden',
+        '#value' => $this->_isset($loaded_test['did']),
+      ];
     }
+
+    // hidden flag to check of edit mode
+    $form['edit_mode'] = [
+      '#type' => 'hidden',
+      '#value' => $edit_mode ? 'true' : 'false',
+    ];
 
     return $form;
   }
@@ -152,7 +200,8 @@ class SimpleABTestForm extends FormBase {
    *   The current state of the form.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $data = [];
+    $test_data = [];
+    $data_data = [];
     $edit_mode = FALSE;
 
     // loop thought all the get values
@@ -160,9 +209,14 @@ class SimpleABTestForm extends FormBase {
     foreach ($form_state->getValues() as $key => $value) {
 
       // find all the rest of the form data
-      if (strpos($key, $this->_fieldPrepend) !== FALSE) {
-        $key = str_replace($this->_fieldPrepend, '', $key);
-        $data[$key] = $value;
+      if (strpos($key, $this->_fieldTestPrepend) !== FALSE) {
+        $key = str_replace($this->_fieldTestPrepend, '', $key);
+        $test_data[$key] = $value;
+      }
+
+      if (strpos($key, $this->_fieldDataPrepend) !== FALSE) {
+        $key = str_replace($this->_fieldDataPrepend, '', $key);
+        $data_data[$key] = $value;
       }
 
       // setup edit mode
@@ -175,7 +229,8 @@ class SimpleABTestForm extends FormBase {
     // we will try and create!
     if (!$edit_mode) {
       // try to create a new test in the database
-      $tid = \Drupal::service('simple_a_b.storage.test')->create($data);
+      $tid = \Drupal::service('simple_a_b.storage.test')
+        ->create($test_data, $data_data);
 
       if ($tid === -1) {
         // if we don't get back a positive tid, display the error message
@@ -185,7 +240,7 @@ class SimpleABTestForm extends FormBase {
       else {
         // otherwise display positive message
         $messenger = \Drupal::messenger();
-        $messenger->addMessage(t('New test "@name" has been created', ['@name' => $data['name']]), 'status');
+        $messenger->addMessage(t('New test "@name" has been created', ['@name' => $test_data['name']]), 'status');
 
         // and redirect back to viewing all tests
         $url = Url::fromRoute('simple_a_b.view_tests');
@@ -194,12 +249,16 @@ class SimpleABTestForm extends FormBase {
     }
     else {
       // set tid and remove it from the $data array
-      $tid = $data['tid'];
-      unset($data['tid']);
+      $tid = $test_data['tid'];
+      unset($test_data['tid']);
+
+      $did = $data_data['did'];
+      $data_data['tid'] = $tid;
+      unset($data_data['did']);
 
       // try to update the existing test
       $update = \Drupal::service('simple_a_b.storage.test')
-        ->update($tid, $data);
+        ->update($tid, $did, $test_data, $data_data);
 
 
       // if status is not true then error
@@ -210,7 +269,7 @@ class SimpleABTestForm extends FormBase {
       else {
         // otherwise display positive message
         $messenger = \Drupal::messenger();
-        $messenger->addMessage(t('"@name" has been updated', ['@name' => $data['name']]), 'status');
+        $messenger->addMessage(t('"@name" has been updated', ['@name' => $test_data['name']]), 'status');
 
         // and redirect back to viewing all tests
         $url = Url::fromRoute('simple_a_b.view_tests');
@@ -226,7 +285,7 @@ class SimpleABTestForm extends FormBase {
    *
    * @return array
    */
-  protected function loadData($tid = NULL) {
+  protected function loadTestData($tid = NULL) {
     $output = [];
 
     // if there is no tid
@@ -236,7 +295,7 @@ class SimpleABTestForm extends FormBase {
     }
 
     // otherwise run a fetch looking up the test id
-    $tests = \Drupal::service('simple_a_b.storage.test')->fetch($tid);
+    $tests = \Drupal::service('simple_a_b.storage.data')->fetch($tid);
 
     // if we find any tests
     // set it to the output after converting it to an array
@@ -254,7 +313,7 @@ class SimpleABTestForm extends FormBase {
   protected function getTypes() {
     return [
       '_none' => t('- none -'),
-      'block' => t('Block'),
+      'block_custom' => t('Custom Block'),
     ];
   }
 

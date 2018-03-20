@@ -81,5 +81,37 @@ function simple_a_b_schema() {
     ],
     'primary key' => ['tid'],
   ];
+
+  $schema['simple_a_b_data'] = [
+    'description' => 'Stores data for any tests.',
+    'fields' => [
+      'did' => [
+        'description' => 'Primary key for each test data',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'tid' => [
+        'description' => 'The match for each test this data belongs too',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'data' => [
+        'description' => 'The data contains things such as content, chances, field ids',
+        'type' => 'blob',
+      ],
+      'conditions' => [
+        'description' => 'Any extra conditions',
+        'type' => 'blob',
+      ],
+      'settings' => [
+        'description' => 'Any extra settings',
+        'type' => 'blob',
+      ],
+    ],
+    'primary key' => ['did'],
+  ];
+
   return $schema;
 }

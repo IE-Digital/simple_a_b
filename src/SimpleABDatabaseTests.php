@@ -7,7 +7,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class SimpleABDatabaseStorage implements SimpleABStorageInterface {
+class SimpleABDatabaseTests implements SimpleABStorageInterface {
 
   protected $connection;
 
@@ -19,6 +19,13 @@ class SimpleABDatabaseStorage implements SimpleABStorageInterface {
 
   private $_viewCache = 'config:views.view.simple_a_b_tests';
 
+  /**
+   * SimpleABDatabaseTests constructor.
+   *
+   * @param \Drupal\Core\Database\Connection $connection
+   * @param \Drupal\Core\State\StateInterface $state
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   */
   public function __construct(Connection $connection, StateInterface $state, RequestStack $request_stack) {
     $this->connection = $connection;
     $this->state = $state;
@@ -28,31 +35,37 @@ class SimpleABDatabaseStorage implements SimpleABStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function create($data) {
+  public function create($test_data = [], $data_data = []) {
 
     $user = \Drupal::currentUser();
     $tid = -1;
 
     // add in the created/updated user & timestamp
-    $data['created_by'] = $user->id();
-    $data['created'] = \Drupal::time()->getRequestTime();
-    $data['updated_by'] = $user->id();
-    $data['updated'] = \Drupal::time()->getRequestTime();
+    $test_data['created_by'] = $user->id();
+    $test_data['created'] = \Drupal::time()->getRequestTime();
+    $test_data['updated_by'] = $user->id();
+    $test_data['updated'] = \Drupal::time()->getRequestTime();
 
     try {
       // try to add the data into the database
-      $tid = $this->connection->insert($this->_table)->fields($data)->execute();
+      $tid = $this->connection->insert($this->_table)->fields($test_data)->execute();
 
       // log that a new test has been created
       \Drupal::logger('simple_a_b')
         ->info('New test "@name" (@tid) has been created', [
-          '@name' => $data['name'],
+          '@name' => $test_data['name'],
           '@tid' => $tid,
         ]);
 
       // invalidate the views cache
       // so that the view will show that something has been added
       Cache::invalidateTags([$this->_viewCache]);
+
+      // set the tid
+      $data_data['tid'] = $tid;
+
+      // update the data from data table
+      \Drupal::service('simple_a_b.storage.data')->create($data_data);
 
       // return the created tid
       return $tid;
@@ -69,32 +82,35 @@ class SimpleABDatabaseStorage implements SimpleABStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function update($tid, $data) {
+  public function update($tid, $did, $test_data = [], $data_data = []) {
 
     // get current user
     $user = \Drupal::currentUser();
 
     // set the updated user & timestamp
-    $data['updated_by'] = $user->id();
-    $data['updated'] = \Drupal::time()->getRequestTime();
+    $test_data['updated_by'] = $user->id();
+    $test_data['updated'] = \Drupal::time()->getRequestTime();
 
     try {
       // try to update based upon the tid
       $update = $this->connection->update($this->_table)
-        ->fields($data)
+        ->fields($test_data)
         ->condition('tid', $tid, "=")
         ->execute();
 
       // log that a new test has been updated
       \Drupal::logger('simple_a_b')
         ->info('Test "@name" (@tid) has been updated', [
-          '@name' => $data['name'],
+          '@name' => $test_data['name'],
           '@tid' => $tid,
         ]);
 
       // invalidate the views cache
       // so that the view will show that something has been updated
       Cache::invalidateTags([$this->_viewCache]);
+
+      // update the data from data table
+      \Drupal::service('simple_a_b.storage.data')->update($did, $data_data);
 
       // return the status
       return $update;
@@ -127,6 +143,9 @@ class SimpleABDatabaseStorage implements SimpleABStorageInterface {
       // invalidate the views cache
       // so that the view will show that something has been removed
       Cache::invalidateTags([$this->_viewCache]);
+
+      // remove the data from data table
+      \Drupal::service('simple_a_b.storage.data')->remove($tid);
 
       // return the status
       return $status;

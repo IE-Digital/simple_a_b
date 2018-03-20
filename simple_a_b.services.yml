@@ -1,4 +1,7 @@
 services:
   simple_a_b.storage.test:
-    class: Drupal\simple_a_b\SimpleABDatabaseStorage
+    class: Drupal\simple_a_b\SimpleABDatabaseTests
+    arguments: ['@database', '@state', '@request_stack']
+  simple_a_b.storage.data:
+    class: Drupal\simple_a_b\SimpleABDatabaseData
     arguments: ['@database', '@state', '@request_stack']
