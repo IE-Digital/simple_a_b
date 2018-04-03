@@ -15,6 +15,19 @@ function simple_a_b_help($route_name, RouteMatchInterface $route_match) {
   }
 }
 
+function simple_a_b_preprocess_block(&$variables) {
+  $block_content = isset($variables['content']['#block_content']) ? $variables['content']['#block_content'] : false;
+
+  if($block_content){
+    $id = $block_content->id();
+    if($id === '1'){
+      $variables['content']['body']['0']['#text'] = 'this is body, test here. check it out';
+      $variables['content']['#cache']['max-age'] = 0;
+      dpm($variables);
+    }
+  }
+}
+
 
 /**
  * Implements hook_views_data().
