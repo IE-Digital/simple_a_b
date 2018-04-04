@@ -113,5 +113,21 @@ function simple_a_b_schema() {
     'primary key' => ['did'],
   ];
 
+  $schema['simple_a_b_config'] = [
+    'description' => 'Stores global config data for all the test.',
+    'fields' => [
+      'name' => [
+        'description' => 'Primary key config name',
+        'type' => 'varchar',
+        'length' => 64,
+      ],
+      'data' => [
+        'description' => 'A serialized config blob',
+        'type' => 'blob',
+      ],
+    ],
+    'primary key' => ['name'],
+  ];
+
   return $schema;
 }

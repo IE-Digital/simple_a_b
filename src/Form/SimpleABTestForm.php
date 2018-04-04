@@ -88,13 +88,15 @@ class SimpleABTestForm extends FormBase {
       '#description' => t('Administrative description'),
     ];
 
+    $entityTypes = static::getTypes();
+
     // test type
     $form['test'][$this->_fieldTestPrepend . 'type'] = [
       '#type' => 'select',
       '#title' => t('Type'),
       '#default_value' => $test_type,
-      '#options' => static::getTypes(),
-      '#description' => t('What type of entity to test'),
+      '#options' => $entityTypes['options'],
+      '#description' => $entityTypes['description'],
       '#required' => TRUE,
       '#ajax' => [
         'callback' => '::loadCorrectEntityAutoComplete',
@@ -345,8 +347,9 @@ class SimpleABTestForm extends FormBase {
    */
   protected static function getTypes() {
     $output = [];
+    $options = [];
     // default of none
-    $output['_none'] = t('- none -');
+    $options['_none'] = t('- none -');
 
     $manager = \Drupal::service('plugin.manager.simpleab.type');
     $plugins = $manager->getDefinitions();
@@ -356,9 +359,24 @@ class SimpleABTestForm extends FormBase {
     if (!empty($plugins)) {
       foreach ($plugins as $test) {
         $instance = $manager->createInstance($test['id']);
-        $output[$instance->getId()] = $instance->getName();
+        $options[$instance->getId()] = $instance->getName();
       }
     }
+
+    // add the options to the array
+    $output['options'] = $options;
+
+    // check the number of options
+    // this will change the text of description
+    // to try and encourage enabling another module
+    if (count($options) > 1) {
+      $output['description'] = t('What kind of entity to run the a/b test');
+    }
+    else {
+      $module_path = '/admin/modules';
+      $output['description'] = t('No entity types could be found. Please <a href="@simple-ab-modules">enable</a> at least one.', ['@simple-ab-modules' => $module_path]);
+    }
+
 
     return $output;
   }

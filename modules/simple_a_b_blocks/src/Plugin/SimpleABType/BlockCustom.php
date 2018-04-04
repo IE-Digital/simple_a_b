@@ -4,7 +4,7 @@
  * Contains \Drupal\simple_a_b\Plugin\SimpleABType\BlockCustom.
  */
 
-namespace Drupal\simple_a_b\Plugin\SimpleABType;
+namespace Drupal\simple_a_b_blocks\Plugin\SimpleABType;
 
 use Drupal\simple_a_b\SimpleABTypeBase;
 

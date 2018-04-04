@@ -48,7 +48,9 @@ class SimpleABDatabaseTests implements SimpleABStorageInterface {
 
     try {
       // try to add the data into the database
-      $tid = $this->connection->insert($this->_table)->fields($test_data)->execute();
+      $tid = $this->connection->insert($this->_table)
+        ->fields($test_data)
+        ->execute();
 
       // log that a new test has been created
       \Drupal::logger('simple_a_b')
@@ -66,6 +68,10 @@ class SimpleABDatabaseTests implements SimpleABStorageInterface {
 
       // update the data from data table
       \Drupal::service('simple_a_b.storage.data')->create($data_data);
+
+      // update the simple a/b config
+      // this helps to keep track of all the enabled / disabled modules
+      $this->updateConfig($test_data['type'], $tid, $test_data['eid'], $test_data['enabled']);
 
       // return the created tid
       return $tid;
@@ -112,6 +118,10 @@ class SimpleABDatabaseTests implements SimpleABStorageInterface {
       // update the data from data table
       \Drupal::service('simple_a_b.storage.data')->update($did, $data_data);
 
+      // update the simple a/b config
+      // this helps to keep track of all the enabled / disabled modules
+      $this->updateConfig($test_data['type'], $tid, $test_data['eid'], $test_data['enabled']);
+
       // return the status
       return $update;
     } catch (\Exception $e) {
@@ -128,6 +138,12 @@ class SimpleABDatabaseTests implements SimpleABStorageInterface {
   public function remove($tid) {
 
     try {
+
+      // fetch the data so we can update the config data
+      // this helps to keep track of all the enabled / disabled modules
+      // in this case it will always make sure we remove the deleted data from the config
+      $test = $this->fetch($tid);
+      $this->updateConfig($test->type, $tid, $test->eid, FALSE);
 
       // try to delete the test
       $status = $this->connection->delete($this->_table)
@@ -147,7 +163,7 @@ class SimpleABDatabaseTests implements SimpleABStorageInterface {
       // remove the data from data table
       \Drupal::service('simple_a_b.storage.data')->remove($tid);
 
-      // return the status
+      //      return the status
       return $status;
     } catch (\Exception $e) {
       // if error log the exception
@@ -166,8 +182,45 @@ class SimpleABDatabaseTests implements SimpleABStorageInterface {
       ->fields('t', ['tid', 'name', 'description', 'enabled', 'type', 'eid'])
       ->condition('t.tid', $tid, '=')
       ->range(0, 1)
-      ->execute()->fetchAll();
+      ->execute()->fetch();
 
     return $test;
+  }
+
+  /**
+   * @param $name
+   * @param $tid
+   * @param $eid
+   * @param $enabled
+   */
+  private function updateConfig($name, $tid, $eid, $enabled) {
+
+    // create a new array with the new data
+    $eids = [$tid => $eid];
+
+    // try to load the config data
+    $config = \Drupal::service('simple_a_b.storage.config')->fetch($name);
+
+    // join the new eid to the old config
+    // or create an new array with just the new eid
+    $data = $config ? $config->data + $eids : $eids;
+
+
+    // if the eid is not enabled
+    // make sure we remove it from the list
+    if (!$enabled) {
+      unset($data[$tid]);
+    }
+
+    // if we don't have any config
+    // we can assume one does not exist therefore we should create one
+    // otherwise we can update the existing config
+    if (!$config) {
+      \Drupal::service('simple_a_b.storage.config')->create($name, $data);
+    }
+    else {
+      \Drupal::service('simple_a_b.storage.config')->update($name, $data);
+    }
+
   }
 }

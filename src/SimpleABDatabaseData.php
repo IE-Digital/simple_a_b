@@ -43,11 +43,7 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
     $tid = -1;
 
     try {
-      dpm($data);
-
       $data = $this->formatDataForUpload($data);
-
-      dpm($data);
 
       // try to add the data into the database
       $tid = $this->connection->insert($this->_table)->fields($data)->execute();
