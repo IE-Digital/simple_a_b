@@ -22,13 +22,14 @@ function simple_a_b_blocks_preprocess_block(&$variables) {
   $provider = isset($variables['configuration']['provider']) ? $variables['configuration']['provider'] : FALSE;
   $is_block_content = $provider === "block_content" ? TRUE : FALSE;
 
-  // disable the default caching
-  $variables['content']['#cache']['max-age'] = 0;
-
   // if we have a block_content block
   if ($is_block_content) {
     // load the block content
     $block_content = $variables['content']['#block_content'];
+
+    // disable the default caching
+    $variables['content']['#cache']['max-age'] = 0;
+
     // get the custom block id
     $id = $block_content->id();
 

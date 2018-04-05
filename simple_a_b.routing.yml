@@ -9,8 +9,8 @@ simple_a_b.view_tests:
 simple_a_b.config:
   path: '/admin/config/user-interface/simple-a-b/settings'
   defaults:
+    _form: '\Drupal\simple_a_b\Form\SimpleABSettingsForm'
     _title: 'Simple A/B Settings'
-    _controller: 'Drupal\simple_a_b\Controller\SimpleABTestController::simple_a_b_view_tests'
   requirements:
     _permission: 'configure ab tests'
 

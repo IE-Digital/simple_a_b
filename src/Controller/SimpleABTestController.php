@@ -1,7 +1,7 @@
 <?php
 /**
- * Builds the settings page
- * /admin/config/user-interface/simple-a-b/settings
+ * used to create a blank page for the  adding tests view to be one
+ * /admin/config/user-interface/simple-a-b
  */
 
 namespace Drupal\simple_a_b\Controller;

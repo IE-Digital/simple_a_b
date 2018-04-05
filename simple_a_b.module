@@ -12,6 +12,10 @@ function simple_a_b_help($route_name, RouteMatchInterface $route_match) {
       $output = '<p>' . t('This is a list of available A/B tests. You can add, edit and remove these tests.', []) . '</p>';
       return $output;
 
+    case 'simple_a_b.config':
+      $output = '<p>' . t('The global config for Simple A/B, here you can configure the way you would like it to run.', []) . '</p>';
+      return $output;
+
   }
 }
 

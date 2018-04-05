@@ -148,7 +148,7 @@ class SimpleABTestForm extends FormBase {
       '#description' => t('Each variation that will be tested against the original, minimum of 1 variation is required.'),
       '#open' => TRUE,
     ];
-    
+
     $form['variations'][$this->_fieldDataPrepend . 'content'] = [
       '#type' => 'text_format',
       '#format' => 'full_html',
