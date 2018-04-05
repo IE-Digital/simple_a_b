@@ -1,4 +1,8 @@
 <?php
+/**
+ * Builds the settings page
+ * /admin/config/user-interface/simple-a-b/settings
+ */
 
 namespace Drupal\simple_a_b\Controller;
 
