@@ -9,16 +9,16 @@ namespace Drupal\simple_a_b\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Defines a test type.
+ * Defines a report type.
  *
  * Plugin Namespace: Plugin\simple_a_b\SimpleABReport
  *
- * @see \Drupal\simple_a_b\Plugin\SimpleABTypeManger
+ * @see \Drupal\simple_a_b\Plugin\SimpleABReportManger
  * @see plugin_api
  *
  * @Annotation
  */
-class SimpleABType extends Plugin {
+class SimpleABReport extends Plugin {
 
   /**
    * The plugin ID.
@@ -38,18 +38,10 @@ class SimpleABType extends Plugin {
 
 
   /**
-   * The entity target type.
+   * The method call.
    *
    * @var string
    */
-  public $entityTargetType;
-
-
-  /**
-   * The entity description
-   *
-   * @var string
-   */
-  public $entityDescription;
+  public $method;
 
 }

@@ -4,7 +4,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\simple_a_b\SimpleAB;
 
 // this will be the id of the simple AB Type
-// src/Plugin/SimpleABType/BlockCustom.php
+// src/Plugin/SimpleABReport/BlockCustom.php
 define('CONFIG_NAME', 'block_custom');
 
 /**
@@ -44,15 +44,17 @@ function simple_a_b_blocks_preprocess_block(&$variables) {
       // if we have a tid
       // we can look it up to try and get the data for the this a/b test
       $test_data = \Drupal::service('simple_a_b.storage.data')->fetch($tid);
-      $content = $test_data->content;
 
+      // get the content and try and get its value
       // check if is array for input value ckeditor
+      // TODO: this could be put in its on function as things get more complex
+      $content = $test_data->content;
       if(is_array($content) && isset($content['value'])){
         $content = $content['value'];
       }
 
       // calculate the experience
-      if (SimpleAB::calculateExperience()) {
+      if (SimpleAB::calculateExperience($test_data)) {
 
         // replace the content
         $variables['content']['body']['0']['#text'] = $content;

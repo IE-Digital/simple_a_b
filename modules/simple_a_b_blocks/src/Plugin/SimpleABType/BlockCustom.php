@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\simple_a_b\Plugin\SimpleABType\BlockCustom.
+ * Contains \Drupal\simple_a_b\Plugin\SimpleABReport\BlockCustom.
  */
 
 namespace Drupal\simple_a_b_blocks\Plugin\SimpleABType;

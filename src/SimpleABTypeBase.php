@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Provides Drupal\simple_a_b\FlavorBase.
+ * Provides Drupal\simple_a_b\SimpleABTypeBase.
  */
 
 namespace Drupal\simple_a_b;
@@ -11,7 +11,7 @@ use Drupal\Component\Plugin\PluginBase;
 class SimpleABTypeBase extends PluginBase implements SimpleABTypeInterface {
 
   /**
-   * Return the name of the ice cream flavor.
+   * Return the name of the entity type.
    *
    * @return string
    */
@@ -20,7 +20,7 @@ class SimpleABTypeBase extends PluginBase implements SimpleABTypeInterface {
   }
 
   /**
-   * Return the name of the ice cream flavor.
+   * Return the name of the entity type.
    *
    * @return string
    */

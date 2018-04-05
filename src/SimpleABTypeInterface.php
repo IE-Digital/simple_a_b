@@ -14,14 +14,14 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
 interface SimpleABTypeInterface extends PluginInspectionInterface {
 
   /**
-   * Return the name of the ice cream flavor.
+   * Return the id of entity type.
    *
    * @return string
    */
   public function getId();
 
   /**
-   * Return the name of the ice cream flavor.
+   * Return the name of the entity type.
    *
    * @return string
    */

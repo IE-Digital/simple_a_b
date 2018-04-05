@@ -11,3 +11,6 @@ services:
   plugin.manager.simpleab.type:
     class: Drupal\simple_a_b\SimpleABTypeManger
     parent: default_plugin_manager
+  plugin.manager.simpleab.report:
+    class: Drupal\simple_a_b\SimpleABReportingManger
+    parent: default_plugin_manager
