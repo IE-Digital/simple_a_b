@@ -148,13 +148,13 @@ class SimpleABTestForm extends FormBase {
       '#description' => t('Each variation that will be tested against the original, minimum of 1 variation is required.'),
       '#open' => TRUE,
     ];
-
+    
     $form['variations'][$this->_fieldDataPrepend . 'content'] = [
-      '#type' => 'textarea',
+      '#type' => 'text_format',
+      '#format' => 'full_html',
       '#title' => t('Replacement content'),
       '#description' => t('This will be the content that replaces the original content'),
-      '#default_value' => $this->_isset($loaded_test['content']),
-
+      '#default_value' => $this->_isset($loaded_test['content']['value']),
     ];
 
     // place to hold the actions
