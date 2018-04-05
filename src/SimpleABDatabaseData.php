@@ -124,7 +124,7 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
     $query->condition('d.tid', $tid, '=');
     $query->range(0, 1);
     $data = $query->execute();
-    $results = $data->fetchAll();
+    $results = $data->fetch();
 
     $results = $this->formatDataForDownload($results);
 
@@ -175,23 +175,19 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
    */
   private function formatDataForDownload($data) {
 
-    foreach ($data as &$test) {
-
-      // unserialize the content
-      $test->data = unserialize($test->data);
-      $test->settings = unserialize($test->settings);
-      $test->conditions = unserialize($test->conditions);
+    // unserialize the content
+    $data->data = unserialize($data->data);
+    $data->settings = unserialize($data->settings);
+    $data->conditions = unserialize($data->conditions);
 
 
-      // loop thought all 'data' separating it all back out
-      foreach ($test->data as $key => $value) {
-        $test->{$key} = $value;
-      }
-
-      // unset the data ouput
-      unset($test->data);
-
+    // loop thought all 'data' separating it all back out
+    foreach ($data->data as $key => $value) {
+      $data->{$key} = $value;
     }
+
+    // unset the data ouput
+    unset($data->data);
 
     return $data;
   }

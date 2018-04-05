@@ -330,9 +330,7 @@ class SimpleABTestForm extends FormBase {
     // set it to the output after converting it to an array
     // there should only be one found
     if (count($tests) > 0) {
-      foreach ($tests as $test) {
-        $output = (array) $test;
-      }
+      $output = (array) $tests;
     }
 
     // return the array
