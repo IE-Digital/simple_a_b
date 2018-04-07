@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\google_analytics\Component\Render\GoogleAnalyticsJavaScriptSnippet;
+use Drupal\simple_a_b_reports_google\SimpleABReportsGoogle;
 
 /**
  * Implements hook_help().
@@ -10,36 +10,45 @@ function simple_a_b_reports_google_help($route_name, RouteMatchInterface $route_
 
 }
 
+/**
+ * Implements hook_page_attachments().
+ */
 function simple_a_b_reports_google_page_attachments(array &$page) {
-  //  ga('send', 'event', [eventCategory], [eventAction], [eventLabel], [eventValue], [fieldsObject]);
-  //
-  //  Field Name	    Value Type	Required	  Description
-  //  eventCategory	  text	      yes	        Typically the object that was interacted with (e.g. 'Video')
-  //  eventAction	    text	      yes	        The type of interaction (e.g. 'play')
-  //  eventLabel	    text	      no	        Useful for categorizing events (e.g. 'Fall Campaign')
-  //  eventValue	    integer	    no	        A numeric value associated with the event (e.g. 42)
-
-  //  $script = 'ga("send", "event", "simple a/b - my test" , "view", "variant 1", 1);';
-  //
-  //
-  //  $page['#attached']['html_head'][] = [
-  //    [
-  //      '#tag' => 'script',
-  //      '#value' => new GoogleAnalyticsJavaScriptSnippet($script),
-  //    ],
-  //    'simple_a_b_reports_google_tracking_code',
-  //  ];
+  // attach the js file
+  $page['#attached']['library'][] = 'simple_a_b_reports_google/simple_a_b_reports_google';
 }
 
-// https://www.drupal.org/docs/8/theming-drupal-8/adding-stylesheets-css-and-javascript-js-to-a-drupal-8-theme
-// https://www.mike-miles.com/blog/creating-ajax-callback-commands-drupal-8
-// https://drupal.stackexchange.com/questions/212438/controller-function-use-with-ajax
-// TODO: Create the method/library to handle this
-// I think the best idea will be to attach a global js file this file will then call a method via ajax
-// which will pull back the request data then call the ga() event function
-// this method here might call a library to process then store the data for retrieval by the ajax request and then clear it out
-// so we only send it once.
+/**
+ * captures data sent from the report to this method
+ * it is defined in the SimpleABReport plugin
+ * see: /src/Plugin/SimpleABReport/GoogleAnalytics.php - "method"
+ *
+ * @param array $test_obj
+ * @param bool $response
+ */
 function _simple_a_b_reports_google_post_event($test_obj = [], $response = TRUE) {
-//  dpm($test_obj);
-//  dpm($response);
+  $data = _simple_a_b_reports_google_prepare_event_data($test_obj, $response);
+  SimpleABReportsGoogle::setReport($data);
+
+}
+
+/**
+ * This method takes the data sent over to the reporter function and prepares
+ * it for sending over to google analytics
+ *
+ * @param $test_obj
+ * @param $response
+ *
+ * @return array
+ */
+function _simple_a_b_reports_google_prepare_event_data($test_obj, $response) {
+  $output = [];
+
+  $output['eventCategory'] = 'simple a/b - ' . $test_obj->name;
+  $output['eventAction'] = 'view';
+  $output['eventLabel'] = $response ? 'variant 1' : 'original';
+  $output['eventValue'] = $test_obj->tid;
+  $output['timeStamp'] = date('c');
+
+  return $output;
 }

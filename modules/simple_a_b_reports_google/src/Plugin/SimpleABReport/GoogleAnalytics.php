@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\simple_a_b\Plugin\SimpleABReport\GoogleAnalytics.
+ * Contains \Drupal\simple_a_b_reports_google\Plugin\SimpleABReport\GoogleAnalytics.
  */
 
 namespace Drupal\simple_a_b_reports_google\Plugin\SimpleABReport;
