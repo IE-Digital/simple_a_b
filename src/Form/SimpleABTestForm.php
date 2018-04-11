@@ -157,23 +157,28 @@ class SimpleABTestForm extends FormBase {
       '#default_value' => $this->_isset($loaded_test['content']['value']),
     ];
 
-
-    $form['extra-tabs'] = [
-      '#type' => 'vertical_tabs',
-      '#default_tab' => 'edit-publication',
-    ];
-
-    $form['conditions'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Conditions'),
-      '#group' => 'extra-tabs',
-    ];
-
-    $form['settings'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Settings'),
-      '#group' => 'extra-tabs',
-    ];
+//    $form['extra-tabs'] = [
+//      '#type' => 'vertical_tabs',
+//      '#default_tab' => 'edit-publication',
+//    ];
+//
+//    $form['conditions'] = [
+//      '#type' => 'details',
+//      '#title' => $this->t('Conditions'),
+//      '#group' => 'extra-tabs',
+//    ];
+//
+//    $form['reports'] = [
+//      '#type' => 'details',
+//      '#title' => $this->t('Reporting'),
+//      '#group' => 'extra-tabs',
+//    ];
+//
+//    $form['settings'] = [
+//      '#type' => 'details',
+//      '#title' => $this->t('Settings'),
+//      '#group' => 'extra-tabs',
+//    ];
 
     // place to hold the actions
     $form['actions'] = ['#type' => 'actions'];
@@ -369,8 +374,6 @@ class SimpleABTestForm extends FormBase {
 
     $manager = \Drupal::service('plugin.manager.simpleab.type');
     $plugins = $manager->getDefinitions();
-
-    dpm($plugins);
 
     // if we have some plugsin
     // lets loop though them to create a drop down list of items
