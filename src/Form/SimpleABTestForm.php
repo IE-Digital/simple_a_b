@@ -157,6 +157,24 @@ class SimpleABTestForm extends FormBase {
       '#default_value' => $this->_isset($loaded_test['content']['value']),
     ];
 
+
+    $form['extra-tabs'] = [
+      '#type' => 'vertical_tabs',
+      '#default_tab' => 'edit-publication',
+    ];
+    
+    $form['conditions'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Conditions'),
+      '#group' => 'extra-tabs',
+    ];
+
+    $form['settings'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Settings'),
+      '#group' => 'extra-tabs',
+    ];
+
     // place to hold the actions
     $form['actions'] = ['#type' => 'actions'];
 
