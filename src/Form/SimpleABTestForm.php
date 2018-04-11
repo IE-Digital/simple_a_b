@@ -162,7 +162,7 @@ class SimpleABTestForm extends FormBase {
       '#type' => 'vertical_tabs',
       '#default_tab' => 'edit-publication',
     ];
-    
+
     $form['conditions'] = [
       '#type' => 'details',
       '#title' => $this->t('Conditions'),
@@ -369,6 +369,8 @@ class SimpleABTestForm extends FormBase {
 
     $manager = \Drupal::service('plugin.manager.simpleab.type');
     $plugins = $manager->getDefinitions();
+
+    dpm($plugins);
 
     // if we have some plugsin
     // lets loop though them to create a drop down list of items

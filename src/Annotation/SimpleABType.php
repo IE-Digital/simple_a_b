@@ -11,7 +11,7 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines a test type.
  *
- * Plugin Namespace: Plugin\simple_a_b\SimpleABReport
+ * Plugin Namespace: Plugin\simple_a_b\SimpleABType
  *
  * @see \Drupal\simple_a_b\Plugin\SimpleABTypeManger
  * @see plugin_api

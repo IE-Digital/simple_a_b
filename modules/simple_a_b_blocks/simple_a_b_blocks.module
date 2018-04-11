@@ -11,7 +11,6 @@ define('CONFIG_NAME', 'block_custom');
  * Implements hook_help().
  */
 function simple_a_b_blocks_help($route_name, RouteMatchInterface $route_match) {
-
 }
 
 /**

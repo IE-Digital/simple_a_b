@@ -19,5 +19,4 @@ use Drupal\simple_a_b\SimpleABTypeBase;
  * )
  */
 class BlockCustom extends SimpleABTypeBase {
-
 }

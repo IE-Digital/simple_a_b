@@ -27,7 +27,7 @@ class SimpleABTypeManger extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/SimpleABReport', $namespaces, $module_handler, 'Drupal\simple_a_b\SimpleABTypeInterface', 'Drupal\simple_a_b\Annotation\SimpleABType');
+    parent::__construct('Plugin/SimpleABType', $namespaces, $module_handler, 'Drupal\simple_a_b\SimpleABTypeInterface', 'Drupal\simple_a_b\Annotation\SimpleABType');
 
     $this->alterInfo('simple_a_b_type_info');
     $this->setCacheBackend($cache_backend, 'simple_a_b_types');
