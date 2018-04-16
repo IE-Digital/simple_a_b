@@ -6,6 +6,9 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * Create connections the the simple a/b data database
+ */
 class SimpleABDatabaseData implements SimpleABStorageInterface {
 
 
@@ -15,19 +18,22 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
 
   protected $requestStack;
 
-  private $_table = 'simple_a_b_data';
+  private $table = 'simple_a_b_data';
 
-  private $_tableJoin = 'simple_a_b_tests';
+  private $tableJoin = 'simple_a_b_tests';
 
-  private $_dontMove = ['tid'];
+  private $dontMove = ['tid'];
 
 
   /**
    * SimpleABDatabaseData constructor.
    *
-   * @param \Connection $connection
-   * @param \StateInterface $state
-   * @param \RequestStack $request_stack
+   * @param \Drupal\Core\Database\Connection $connection
+   *  connections
+   * @param \Drupal\Core\State\StateInterface $state
+   *  state
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *  request stack
    */
   public function __construct(Connection $connection, StateInterface $state, RequestStack $request_stack) {
     $this->connection = $connection;
@@ -45,17 +51,17 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
     try {
       $data = $this->formatDataForUpload($data);
 
-      // try to add the data into the database
-      $tid = $this->connection->insert($this->_table)->fields($data)->execute();
+      // Try to add the data into the database.
+      $tid = $this->connection->insert($this->table)->fields($data)->execute();
 
-      //       return the created tid
+      // Return the created tid.
       return $tid;
     } catch (\Exception $e) {
 
-      // if error log the exception
+      // If error log the exception.
       \Drupal::logger('simple_a_b')->error($e);
 
-      // return -1 tid
+      // Return -1 tid.
       return $tid;
     }
   }
@@ -66,19 +72,20 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
   public function update($did, $data) {
 
     try {
-      // format the data for upload
+      // Format the data for upload.
       $data = $this->formatDataForUpload($data);
 
-      // try to update based upon the tid
-      $update = $this->connection->update($this->_table)
+      // Try to update based upon the tid.
+      $update = $this->connection->update($this->table)
         ->fields($data)
         ->condition('did', $did, "=")
         ->execute();
 
-      // return the status
+      // Return the status.
       return $update;
     } catch (\Exception $e) {
-      // if error log the exception
+
+      // If error log the exception.
       \Drupal::logger('simple_a_b')->error($e);
 
       return FALSE;
@@ -91,15 +98,16 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
   public function remove($tid) {
     try {
 
-      // try to delete the test
-      $status = $this->connection->delete($this->_table)
+      // Try to delete the test.
+      $status = $this->connection->delete($this->table)
         ->condition('tid', $tid)
         ->execute();
 
-      // return the status
+      // Return the status.
       return $status;
     } catch (\Exception $e) {
-      // if error log the exception
+
+      // If error log the exception.
       \Drupal::logger('simple_a_b')->error($e);
 
       return FALSE;
@@ -110,7 +118,7 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
    * {@inheritdoc}
    */
   public function fetch($tid) {
-    $query = $this->connection->select($this->_table, 'd');
+    $query = $this->connection->select($this->table, 'd');
     $query->fields('d', ['did', 'tid', 'data', 'conditions', 'settings']);
     $query->fields('t', [
       'tid',
@@ -120,7 +128,7 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
       'type',
       'eid',
     ]);
-    $query->join($this->_tableJoin, 't', 'd.tid=t.tid');
+    $query->join($this->tableJoin, 't', 'd.tid=t.tid');
     $query->condition('d.tid', $tid, '=');
     $query->range(0, 1);
     $data = $query->execute();
@@ -132,11 +140,12 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
   }
 
   /**
-   * Format the data for upload to the database
+   * Format the data for upload to the database.
    *
    * @param $data
    *
    * @return array
+   *  New array with keys added in
    */
   private function formatDataForUpload($data) {
     $output = [];
@@ -144,24 +153,23 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
     $output['settings'] = [];
     $output['conditions'] = [];
 
-    // move all data from its keys
-    // into data as a serialize data
+    // Move all data from its keys, into data as a serialize data.
     foreach ($data as $key => $item) {
-      if (!in_array($key, $this->_dontMove)) {
+      if (!in_array($key, $this->dontMove)) {
         $output['data'][$key] = $item;
       }
       else {
-        // remember to keep everything else
+        // Remember to keep everything else.
         $output[$key] = $item;
       }
     }
 
-    // serialise data arrays
+    // Serialise data arrays.
     $output['data'] = serialize($output['data']);
     $output['settings'] = serialize($output['settings']);
     $output['conditions'] = serialize($output['conditions']);
 
-    // return the new data
+    // Return the new data.
     return $output;
   }
 
@@ -172,21 +180,22 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
    * @param $data
    *
    * @return mixed
+   *  Unserialize & put back fields.
    */
   private function formatDataForDownload($data) {
 
-    // unserialize the content
+    // Unserialize the content.
     $data->data = unserialize($data->data);
     $data->settings = unserialize($data->settings);
     $data->conditions = unserialize($data->conditions);
 
 
-    // loop thought all 'data' separating it all back out
+    // Loop thought all 'data' separating it all back out.
     foreach ($data->data as $key => $value) {
       $data->{$key} = $value;
     }
 
-    // unset the data ouput
+    // Unset the data output.
     unset($data->data);
 
     return $data;

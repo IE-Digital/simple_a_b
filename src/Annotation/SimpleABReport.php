@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\simple_a_b\Annotation\SimpleABReport.
- */
 
 namespace Drupal\simple_a_b\Annotation;
 
@@ -11,7 +7,7 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines a report type.
  *
- * Plugin Namespace: Plugin\simple_a_b\SimpleABReport
+ * Plugin Namespace: Plugin\simple_a_b\SimpleABReport.
  *
  * @see \Drupal\simple_a_b\Plugin\SimpleABReportManger
  * @see plugin_api

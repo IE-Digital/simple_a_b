@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\simple_a_b\Annotation\SimpleABReport.
- */
 
 namespace Drupal\simple_a_b\Annotation;
 
@@ -11,7 +7,7 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines a test type.
  *
- * Plugin Namespace: Plugin\simple_a_b\SimpleABType
+ * Plugin Namespace: Plugin\simple_a_b\SimpleABType.
  *
  * @see \Drupal\simple_a_b\Plugin\SimpleABTypeManger
  * @see plugin_api
@@ -46,7 +42,7 @@ class SimpleABType extends Plugin {
 
 
   /**
-   * The entity description
+   * The entity description.
    *
    * @var string
    */

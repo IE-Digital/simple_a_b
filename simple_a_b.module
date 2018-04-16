@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains simple_a_b_reports_google.module.
+ */
+
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -7,7 +12,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
  */
 function simple_a_b_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
-
     case 'simple_a_b.view_tests':
       $output = '<p>' . t('This is a list of available A/B tests. You can add, edit and remove these tests.', []) . '</p>';
       return $output;
@@ -15,17 +19,15 @@ function simple_a_b_help($route_name, RouteMatchInterface $route_match) {
     case 'simple_a_b.config':
       $output = '<p>' . t('The global config for Simple A/B, here you can configure the way you would like it to run.', []) . '</p>';
       return $output;
-
   }
 }
-
 
 /**
  * Implements hook_views_data().
  */
 function simple_a_b_views_data() {
 
-  // create data structure so views api knows what to look for
+  // Create data structure so views api knows what to look for.
   $data['simple_a_b_tests']['table'] = [
     'group' => t('Simple A/B tests'),
     'provider' => 'simple_a_b',
@@ -37,7 +39,7 @@ function simple_a_b_views_data() {
     ],
   ];
 
-  // show that there is a join between created by and users data
+  // Show that there is a join between created by and users data.
   $data['simple_a_b_tests']['table']['join'] = [
     'users_field_data' => [
       'left_field' => 'uid',
@@ -45,7 +47,7 @@ function simple_a_b_views_data() {
     ],
   ];
 
-  // show that there is a join between updated by and users data
+  // Show that there is a join between updated by and users data.
   $data['simple_a_b_tests']['table']['join'] = [
     'users_field_data' => [
       'left_field' => 'uid',
@@ -53,7 +55,7 @@ function simple_a_b_views_data() {
     ],
   ];
 
-  // test id
+  // Test id.
   $data['simple_a_b_tests']['tid'] = [
     'title' => t('Id'),
     'help' => t('The id that created the test'),
@@ -71,7 +73,7 @@ function simple_a_b_views_data() {
     ],
   ];
 
-  // test name
+  // Test name.
   $data['simple_a_b_tests']['name'] = [
     'title' => t('Name'),
     'help' => t('Name of the test'),
@@ -89,7 +91,7 @@ function simple_a_b_views_data() {
     ],
   ];
 
-  // test description
+  // Test description.
   $data['simple_a_b_tests']['description'] = [
     'title' => t('Description'),
     'help' => t('Description of the test'),
@@ -107,7 +109,7 @@ function simple_a_b_views_data() {
     ],
   ];
 
-  // test enabled
+  // Test enabled.
   $data['simple_a_b_tests']['enabled'] = [
     'title' => t('Enabled'),
     'help' => t('Flag for the state of the test'),
@@ -125,7 +127,7 @@ function simple_a_b_views_data() {
     ],
   ];
 
-  // test type
+  // Test type.
   $data['simple_a_b_tests']['type'] = [
     'title' => t('Type'),
     'help' => t('Type of the test'),
@@ -143,7 +145,7 @@ function simple_a_b_views_data() {
     ],
   ];
 
-  // entity id
+  // Entity id.
   $data['simple_a_b_tests']['eid'] = [
     'title' => t('Entity id'),
     'help' => t('The id of the entity this test relates too'),
@@ -161,7 +163,7 @@ function simple_a_b_views_data() {
     ],
   ];
 
-  // test created by
+  // Test created by.
   $data['simple_a_b_tests']['created_by'] = [
     'title' => t('Created by'),
     'help' => t('The user that created the test'),
@@ -186,7 +188,7 @@ function simple_a_b_views_data() {
     ],
   ];
 
-  // test created time
+  // Test created time.
   $data['simple_a_b_tests']['created'] = [
     'title' => t('Created'),
     'help' => t('When the test was created'),
@@ -201,7 +203,7 @@ function simple_a_b_views_data() {
     ],
   ];
 
-  // test updated by
+  // Test updated by.
   $data['simple_a_b_tests']['updated_by'] = [
     'title' => t('Updated by'),
     'help' => t('The user that last updated the test'),
@@ -226,7 +228,7 @@ function simple_a_b_views_data() {
     ],
   ];
 
-  // test updated time
+  // Test updated time.
   $data['simple_a_b_tests']['updated'] = [
     'title' => t('Updated'),
     'help' => t('When the test was updated'),

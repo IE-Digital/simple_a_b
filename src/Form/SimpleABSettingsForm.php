@@ -7,7 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Defines a form that configures devel settings.
+ * Defines a form that configures simple_a_b settings.
  */
 class SimpleABSettingsForm extends ConfigFormBase {
 
@@ -33,7 +33,7 @@ class SimpleABSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, Request $request = NULL) {
     $simple_a_b_config = $this->config('simple_a_b.settings');
 
-    // create holder for reporting settings
+    // Create holder for reporting settings.
     $form['report'] = [
       '#type' => 'details',
       '#title' => t('Reporting'),
@@ -41,7 +41,7 @@ class SimpleABSettingsForm extends ConfigFormBase {
       '#open' => TRUE,
     ];
 
-    // reporting methods
+    // Reporting methods.
     $reportingMethods = static::getReportingMethods();
     $form['report']['reporting'] = [
       '#type' => 'select',
@@ -51,7 +51,7 @@ class SimpleABSettingsForm extends ConfigFormBase {
       '#description' => $reportingMethods['description'],
     ];
 
-    // create holder for cookie session settings
+    // Create holder for cookie session settings.
     $form['cookie_session'] = [
       '#type' => 'details',
       '#title' => t('Cookies & Sessions'),
@@ -59,7 +59,7 @@ class SimpleABSettingsForm extends ConfigFormBase {
       '#open' => TRUE,
     ];
 
-    // create drop down of options for remember
+    // Create drop down of options for remember.
     $rememberMethods = static::getRememberMethod();
     $form['cookie_session']['remember'] = [
       '#type' => 'select',
@@ -69,7 +69,7 @@ class SimpleABSettingsForm extends ConfigFormBase {
       '#description' => t('Select the method you wish for simple a/b to remember variations.'),
     ];
 
-    // text field for remember prefix
+    // Text field for remember prefix.
     $form['cookie_session']['remember_prefix'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Prefix'),
@@ -79,7 +79,7 @@ class SimpleABSettingsForm extends ConfigFormBase {
       '#description' => t('Prefix to be attached to the front of cookie/session data.'),
     ];
 
-    // select for the length of time the cookie / session lives
+    // Select for the length of time the cookie / session lives.
     $rememberLifetime = static::getRememberLifetime();
     $form['cookie_session']['remember_lifetime'] = [
       '#type' => 'select',
@@ -111,21 +111,22 @@ class SimpleABSettingsForm extends ConfigFormBase {
 
 
   /**
-   * Looks up any reporting methods installed
+   * Looks up any reporting methods installed.
    *
    * @return array
+   *  Returns the reporting methods
    */
   protected static function getReportingMethods() {
     $output = [];
     $options = [];
-    // default of none
+
+    // Default of none.
     $options['_none'] = t('- none -');
 
     $manager = \Drupal::service('plugin.manager.simpleab.report');
     $plugins = $manager->getDefinitions();
 
-    // if we have some plugsin
-    // lets loop though them to create a drop down list of items
+    // if we have some plugin's, loop them to create a drop down list of items.
     if (!empty($plugins)) {
       foreach ($plugins as $reporter) {
         $instance = $manager->createInstance($reporter['id']);
@@ -133,12 +134,10 @@ class SimpleABSettingsForm extends ConfigFormBase {
       }
     }
 
-    // add the options to the array
+    // Add the options to the array.
     $output['options'] = $options;
 
-    // check the number of options
-    // this will change the text of description
-    // to try and encourage enabling another module
+    // Check if with have any options, if not display module link.
     if (count($options) > 1) {
       $output['description'] = t('Where should the results be reported to?');
     }
@@ -147,30 +146,33 @@ class SimpleABSettingsForm extends ConfigFormBase {
       $output['description'] = t('No reporting methods could be found. Please <a href="@simple-ab-modules">enable</a> at least one.', ['@simple-ab-modules' => $module_path]);
     }
 
-
     return $output;
   }
 
   /**
-   * Creates a list of remembering method options
+   * Creates a list of remembering method options.
    *
    * @return array
+   *  Returns remember methods
    */
-  protected static function getRememberMethod(){
+  protected static function getRememberMethod() {
     $options = [];
-    // default of none
+
+    // Default of none.
     $options['_none'] = t('- none -');
+    // Second option cookies.
     $options['cookie'] = t('Cookies');
 
     return $options;
   }
 
   /**
-   * Creates a list of lifetime options
+   * Creates a list of lifetime options.
    *
    * @return array
+   *  Returns a list of lifetime options
    */
-  protected static function getRememberLifetime(){
+  protected static function getRememberLifetime() {
     $options = [];
 
     $options['60'] = t('1 minute');
@@ -184,4 +186,5 @@ class SimpleABSettingsForm extends ConfigFormBase {
 
     return $options;
   }
+
 }

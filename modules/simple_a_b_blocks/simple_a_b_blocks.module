@@ -1,10 +1,15 @@
 <?php
 
+/**
+ * @file
+ * Contains simple_a_b_blocks.module
+ */
+
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\simple_a_b\SimpleAB;
 
 // This will be the id of the simple AB Type - src/Plugin/SimpleABReport/BlockCustom.php.
-define('CONFIG_NAME', 'block_custom');
+define('SIMPLE_A_B_BLOCKS_CONFIG_NAME', 'block_custom');
 
 /**
  * Implements hook_help().
@@ -22,9 +27,7 @@ function simple_a_b_blocks_preprocess_block(&$variables) {
 
   // If we have a block_content block.
   if ($is_block_content) {
-
-    dpm($variables);
-
+    
     // Load the block content.
     $block_content = $variables['content']['#block_content'];
 
@@ -36,7 +39,8 @@ function simple_a_b_blocks_preprocess_block(&$variables) {
     $id = $block_content->id();
 
     // Load a list of the enabled custom blocks.
-    $config = \Drupal::service('simple_a_b.storage.config')->fetch(CONFIG_NAME);
+    $config = \Drupal::service('simple_a_b.storage.config')
+      ->fetch(SIMPLE_A_B_BLOCKS_CONFIG_NAME);
     $eids = isset($config->data) ? $config->data : [];
 
     // Look for the id in the list of eids and return the tid (the key of the array).
@@ -48,7 +52,7 @@ function simple_a_b_blocks_preprocess_block(&$variables) {
       // Get the content and try and get its value check if is array for input value ckeditor.
       // TODO: this could be put in its on function as things get more complex
       $content = $test_data->content;
-      if(is_array($content) && isset($content['value'])){
+      if (is_array($content) && isset($content['value'])) {
         $content = $content['value'];
       }
 

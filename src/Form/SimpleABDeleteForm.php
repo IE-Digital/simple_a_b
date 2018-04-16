@@ -2,16 +2,18 @@
 
 namespace Drupal\simple_a_b\Form;
 
-
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
+/**
+ * Create a delete form.
+ */
 class SimpleABDeleteForm extends ConfirmFormBase {
 
   protected $tid;
 
-  protected $loaded_data;
+  protected $loadedData;
 
   /**
    * {@inheritdoc}
@@ -26,8 +28,8 @@ class SimpleABDeleteForm extends ConfirmFormBase {
   public function getQuestion() {
     $message = t('You cannot delete, which you cannot find...');
 
-    if (!empty($this->loaded_data)) {
-      $message = t('Are you sure you want to delete "@name" test?', ['@name' => $this->loaded_data['name']]);
+    if (!empty($this->loadedData)) {
+      $message = t('Are you sure you want to delete "@name" test?', ['@name' => $this->loadedData['name']]);
     }
 
     return $message;
@@ -56,17 +58,16 @@ class SimpleABDeleteForm extends ConfirmFormBase {
 
   /**
    * {@inheritdoc}
-   *
    */
   public function buildForm(array $form, FormStateInterface $form_state, $tid = NULL) {
     $this->tid = $tid;
 
-    $this->loaded_data = $this->loadData($this->tid);
+    $this->loadedData = $this->loadData($this->tid);
 
-    if (empty($this->loaded_data)) {
+    if (empty($this->loadedData)) {
       $form = [];
-      // set error message
-      drupal_set_message(t('Error the test could not be found'),'error');
+      // Set error message.
+      drupal_set_message(t('Error the test could not be found'), 'error');
 
       return $form;
     }
@@ -74,7 +75,6 @@ class SimpleABDeleteForm extends ConfirmFormBase {
       return parent::buildForm($form, $form_state);
     }
   }
-
 
   /**
    * Form submission handler.
@@ -85,17 +85,17 @@ class SimpleABDeleteForm extends ConfirmFormBase {
    *   The current state of the form.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // try to update the existing test
+    // Try to update the existing test.
     $remove = \Drupal::service('simple_a_b.storage.test')->remove($this->tid);
 
     if ($remove != TRUE) {
-      drupal_set_message(t('Error deleting test'),'error');
+      drupal_set_message(t('Error deleting test'), 'error');
     }
     else {
-      // otherwise display message
-      drupal_set_message(t('"@name" has been removed', ['@name' => $this->loaded_data['name']]), 'status');
+      // Otherwise display message.
+      drupal_set_message(t('"@name" has been removed', ['@name' => $this->loadedData['name']]), 'status');
 
-      // and redirect back to viewing all tests
+      // Redirect back to viewing all tests.
       $url = Url::fromRoute('simple_a_b.view_tests');
       $form_state->setRedirectUrl($url);
     }
@@ -107,24 +107,23 @@ class SimpleABDeleteForm extends ConfirmFormBase {
    * @param null $tid
    *
    * @return array
+   *  Returns an empty or data full array
    */
   protected function loadData($tid = NULL) {
     $output = [];
 
-    // if there is no tid
-    // then simply return empty array
+    // If there is no tid, then simply return empty array.
     if ($tid === NULL) {
       return $output;
     }
 
-    // otherwise run a fetch looking up the test id
+    // Otherwise run a fetch looking up the test id.
     $tests = \Drupal::service('simple_a_b.storage.test')->fetch($tid);
 
-    // if we find any tests
-    // set it to the output after converting it to an array
-    // there should only be one found
+    // If we find any tests, set it to the output after converting it to an array.
     if (count($tests) > 0) {
       foreach ($tests as $test) {
+        // There should only be one found.
         $output = (array) $test;
       }
     }
@@ -132,4 +131,5 @@ class SimpleABDeleteForm extends ConfirmFormBase {
     // return the array
     return $output;
   }
+
 }

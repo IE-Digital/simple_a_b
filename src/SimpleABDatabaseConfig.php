@@ -6,6 +6,9 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * Create connections the the simple a/b config database
+ */
 class SimpleABDatabaseConfig implements SimpleABStorageInterface {
 
 
@@ -15,15 +18,18 @@ class SimpleABDatabaseConfig implements SimpleABStorageInterface {
 
   protected $requestStack;
 
-  private $_table = 'simple_a_b_config';
+  private $table = 'simple_a_b_config';
 
 
   /**
-   * SimpleABDatabaseData constructor.
+   * SimpleABDatabaseConfig constructor.
    *
-   * @param \Connection $connection
-   * @param \StateInterface $state
-   * @param \RequestStack $request_stack
+   * @param \Drupal\Core\Database\Connection $connection
+   *  connections
+   * @param \Drupal\Core\State\StateInterface $state
+   *  state
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *  request stack
    */
   public function __construct(Connection $connection, StateInterface $state, RequestStack $request_stack) {
     $this->connection = $connection;
@@ -40,21 +46,20 @@ class SimpleABDatabaseConfig implements SimpleABStorageInterface {
     $input['name'] = $name;
     $input['data'] = serialize($data);
 
-    // try to add the data into the database
+    // Try to add the data into the database.
     try {
-      $key = $this->connection->insert($this->_table)
+      $key = $this->connection->insert($this->table)
         ->fields($input)
         ->execute();
       return $key;
     } catch (\Exception $e) {
 
-      // if error log the exception
+      // If error log the exception.
       \Drupal::logger('simple_a_b')->error($e);
 
-      // return -1 tid
+      // Return -1 tid/
       return $key;
     }
-
   }
 
   /**
@@ -66,16 +71,16 @@ class SimpleABDatabaseConfig implements SimpleABStorageInterface {
       $input = [];
       $input['data'] = serialize($data);
 
-      // try to update based upon the name
-      $update = $this->connection->update($this->_table)
+      // Try to update based upon the name.
+      $update = $this->connection->update($this->table)
         ->fields($input)
         ->condition('name', $name, "=")
         ->execute();
 
-      // return the status
+      // Return the status.
       return $update;
     } catch (\Exception $e) {
-      // if error log the exception
+      // If error log the exception.
       \Drupal::logger('simple_a_b')->error($e);
 
       return FALSE;
@@ -87,15 +92,15 @@ class SimpleABDatabaseConfig implements SimpleABStorageInterface {
    */
   public function remove($name) {
     try {
-      // try to delete the config data
-      $status = $this->connection->delete($this->_table)
+      // Try to delete the config data.
+      $status = $this->connection->delete($this->table)
         ->condition('name', $name)
         ->execute();
 
-      // return the status
+      // Return the status.
       return $status;
     } catch (\Exception $e) {
-      // if error log the exception
+      // If error log the exception.
       \Drupal::logger('simple_a_b')->error($e);
 
       return FALSE;
@@ -106,7 +111,7 @@ class SimpleABDatabaseConfig implements SimpleABStorageInterface {
    * {@inheritdoc}
    */
   public function fetch($name) {
-    $query = $this->connection->select($this->_table, 'c');
+    $query = $this->connection->select($this->table, 'c');
     $query->fields('c', ['name', 'data']);
     $query->condition('c.name', $name, '=');
     $query->range(0, 1);
@@ -120,11 +125,12 @@ class SimpleABDatabaseConfig implements SimpleABStorageInterface {
   }
 
   /**
-   * Formats the data for use on forms
+   * Formats the data for use on forms.
    *
    * @param $data
    *
    * @return mixed
+   *  returns unserialize data
    */
   private function formatDataForDownload($data) {
 
@@ -134,4 +140,5 @@ class SimpleABDatabaseConfig implements SimpleABStorageInterface {
 
     return $data;
   }
+
 }
