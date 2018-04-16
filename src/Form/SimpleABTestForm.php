@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
- * Defines a form that adds/edits tests
+ * Defines a form that adds/edits tests.
  */
 class SimpleABTestForm extends FormBase {
 
@@ -138,7 +138,6 @@ class SimpleABTestForm extends FormBase {
       '#required' => TRUE,
     ];
 
-
     // Data information.
     $form['variations'] = [
       '#type' => 'details',
@@ -156,7 +155,7 @@ class SimpleABTestForm extends FormBase {
       '#default_value' => $this->_isset($loaded_test['content']['value']),
     ];
 
-    //    $form['extra-tabs'] = [
+    // $form['extra-tabs'] = [
     //      '#type' => 'vertical_tabs',
     //      '#default_tab' => 'edit-publication',
     //    ];
@@ -177,8 +176,7 @@ class SimpleABTestForm extends FormBase {
     //      '#type' => 'details',
     //      '#title' => $this->t('Settings'),
     //      '#group' => 'extra-tabs',
-    //    ];
-
+    //    ];.
     // Place to hold the actions.
     $form['actions'] = ['#type' => 'actions'];
 
@@ -189,11 +187,10 @@ class SimpleABTestForm extends FormBase {
       '#attributes' => ['class' => ['button--primary']],
     ];
 
-    //    $form['actions']['preview'] = [
+    // $form['actions']['preview'] = [
     //      '#type' => 'submit',
     //      '#value' => t('Preview'),
-    //    ];
-
+    //    ];.
     // If edit mode enabled.
     if ($edit_mode) {
 
@@ -292,7 +289,6 @@ class SimpleABTestForm extends FormBase {
       $update = \Drupal::service('simple_a_b.storage.test')
         ->update($tid, $did, $test_data, $data_data);
 
-
       // If status is not true then error.
       if ($update != TRUE) {
         drupal_set_message(t('Error updating test'), 'error');
@@ -301,14 +297,12 @@ class SimpleABTestForm extends FormBase {
         // Otherwise display positive message.
         drupal_set_message(t('"@name" has been updated', ['@name' => $test_data['name']]), 'status');
 
-
         // Redirect back to viewing all tests.
         $url = Url::fromRoute('simple_a_b.view_tests');
         $form_state->setRedirectUrl($url);
       }
     }
   }
-
 
   /**
    * Loads in the correct entity selector based upon the type selected.
@@ -317,7 +311,7 @@ class SimpleABTestForm extends FormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *
    * @return mixed
-   *  Returns an entity collector.
+   *   Returns an entity collector.
    */
   public function loadCorrectEntityAutoComplete(array &$form, FormStateInterface $form_state) {
     return $form['test'][$this->fieldTestPrepend . 'eid_container'];
@@ -329,7 +323,7 @@ class SimpleABTestForm extends FormBase {
    * @param null $tid
    *
    * @return array
-   *  Loads information about a test.
+   *   Loads information about a test.
    */
   protected static function loadTestData($tid = NULL) {
     $output = [];
@@ -344,7 +338,7 @@ class SimpleABTestForm extends FormBase {
 
     // If we find any tests, set it to the output after converting it to an array.
     if (count($tests) > 0) {
-      // There should only be one found
+      // There should only be one found.
       $output = (array) $tests;
     }
 
@@ -356,7 +350,7 @@ class SimpleABTestForm extends FormBase {
    * Using the plugin manger looks for any test types.
    *
    * @return array
-   *  Return a list of the entity types.
+   *   Return a list of the entity types.
    */
   protected static function getTypes() {
     $output = [];
@@ -397,7 +391,7 @@ class SimpleABTestForm extends FormBase {
    * @param $type
    *
    * @return string
-   *  returns back the entity type for the collection field
+   *   returns back the entity type for the collection field
    */
   protected static function getEntityType($type) {
     $manager = \Drupal::service('plugin.manager.simpleab.type');
@@ -449,7 +443,7 @@ class SimpleABTestForm extends FormBase {
    * @param $type
    *
    * @return bool
-   *  Returns if the entity is disabled
+   *   Returns if the entity is disabled
    */
   protected static function getEntityDisabledState($type) {
 
@@ -461,7 +455,6 @@ class SimpleABTestForm extends FormBase {
     }
   }
 
-
   /**
    * A simple wrapper for isset to make it shorter to test.
    *
@@ -469,9 +462,10 @@ class SimpleABTestForm extends FormBase {
    * @param string $default_response
    *
    * @return string
-   *  returns a value or default response
+   *   returns a value or default response
    */
   private function _isset(&$value, $default_response = '') {
     return isset($value) ? $value : $default_response;
   }
+
 }

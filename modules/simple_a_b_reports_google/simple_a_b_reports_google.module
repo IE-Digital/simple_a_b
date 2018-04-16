@@ -30,9 +30,9 @@ function simple_a_b_reports_google_page_attachments(array &$page) {
  * see: /src/Plugin/SimpleABReport/GoogleAnalytics.php - "method".
  *
  * @param array $test_obj
- *  The test object.
+ *   The test object.
  * @param bool $response
- *  The response of if we are showing original or a variation.
+ *   The response of if we are showing original or a variation.
  */
 function _simple_a_b_reports_google_post_event(array $test_obj = [], $response = TRUE) {
   $data = _simple_a_b_reports_google_prepare_event_data($test_obj, $response);
@@ -46,12 +46,12 @@ function _simple_a_b_reports_google_post_event(array $test_obj = [], $response =
  * it for sending over to google analytics.
  *
  * @param array $test_obj
- *  The test object.
+ *   The test object.
  * @param bool $response
- *  The response of if we are showing original or a variation.
+ *   The response of if we are showing original or a variation.
  *
  * @return array
- *  Returns a cleaned up array.
+ *   Returns a cleaned up array.
  */
 function _simple_a_b_reports_google_prepare_event_data(array $test_obj, $response) {
   $output = [];

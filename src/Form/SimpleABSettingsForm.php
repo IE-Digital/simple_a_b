@@ -92,7 +92,6 @@ class SimpleABSettingsForm extends ConfigFormBase {
     return parent::buildForm($form, $form_state);
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -109,12 +108,11 @@ class SimpleABSettingsForm extends ConfigFormBase {
     parent::submitForm($form, $form_state);
   }
 
-
   /**
    * Looks up any reporting methods installed.
    *
    * @return array
-   *  Returns the reporting methods
+   *   Returns the reporting methods
    */
   protected static function getReportingMethods() {
     $output = [];
@@ -126,7 +124,7 @@ class SimpleABSettingsForm extends ConfigFormBase {
     $manager = \Drupal::service('plugin.manager.simpleab.report');
     $plugins = $manager->getDefinitions();
 
-    // if we have some plugin's, loop them to create a drop down list of items.
+    // If we have some plugin's, loop them to create a drop down list of items.
     if (!empty($plugins)) {
       foreach ($plugins as $reporter) {
         $instance = $manager->createInstance($reporter['id']);
@@ -153,7 +151,7 @@ class SimpleABSettingsForm extends ConfigFormBase {
    * Creates a list of remembering method options.
    *
    * @return array
-   *  Returns remember methods
+   *   Returns remember methods
    */
   protected static function getRememberMethod() {
     $options = [];
@@ -170,7 +168,7 @@ class SimpleABSettingsForm extends ConfigFormBase {
    * Creates a list of lifetime options.
    *
    * @return array
-   *  Returns a list of lifetime options
+   *   Returns a list of lifetime options
    */
   protected static function getRememberLifetime() {
     $options = [];

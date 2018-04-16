@@ -102,12 +102,12 @@ class SimpleABDeleteForm extends ConfirmFormBase {
   }
 
   /**
-   * load a tests information used for amending edits
+   * Load a tests information used for amending edits.
    *
    * @param null $tid
    *
    * @return array
-   *  Returns an empty or data full array
+   *   Returns an empty or data full array
    */
   protected function loadData($tid = NULL) {
     $output = [];
@@ -128,7 +128,7 @@ class SimpleABDeleteForm extends ConfirmFormBase {
       }
     }
 
-    // return the array
+    // Return the array.
     return $output;
   }
 

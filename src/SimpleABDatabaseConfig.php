@@ -7,7 +7,7 @@ use Drupal\Core\State\StateInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Create connections the the simple a/b config database
+ * Create connections the the simple a/b config database.
  */
 class SimpleABDatabaseConfig implements SimpleABStorageInterface {
 
@@ -20,16 +20,15 @@ class SimpleABDatabaseConfig implements SimpleABStorageInterface {
 
   private $table = 'simple_a_b_config';
 
-
   /**
    * SimpleABDatabaseConfig constructor.
    *
    * @param \Drupal\Core\Database\Connection $connection
-   *  connections
+   *   connections.
    * @param \Drupal\Core\State\StateInterface $state
-   *  state
+   *   state.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *  request stack
+   *   request stack.
    */
   public function __construct(Connection $connection, StateInterface $state, RequestStack $request_stack) {
     $this->connection = $connection;
@@ -52,12 +51,13 @@ class SimpleABDatabaseConfig implements SimpleABStorageInterface {
         ->fields($input)
         ->execute();
       return $key;
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
 
       // If error log the exception.
       \Drupal::logger('simple_a_b')->error($e);
 
-      // Return -1 tid/
+      // Return -1 tid/.
       return $key;
     }
   }
@@ -79,7 +79,8 @@ class SimpleABDatabaseConfig implements SimpleABStorageInterface {
 
       // Return the status.
       return $update;
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       // If error log the exception.
       \Drupal::logger('simple_a_b')->error($e);
 
@@ -99,7 +100,8 @@ class SimpleABDatabaseConfig implements SimpleABStorageInterface {
 
       // Return the status.
       return $status;
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       // If error log the exception.
       \Drupal::logger('simple_a_b')->error($e);
 
@@ -130,7 +132,7 @@ class SimpleABDatabaseConfig implements SimpleABStorageInterface {
    * @param $data
    *
    * @return mixed
-   *  returns unserialize data
+   *   returns unserialize data
    */
   private function formatDataForDownload($data) {
 

@@ -7,7 +7,7 @@ use Drupal\Core\State\StateInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Create connections the the simple a/b data database
+ * Create connections the the simple a/b data database.
  */
 class SimpleABDatabaseData implements SimpleABStorageInterface {
 
@@ -24,16 +24,15 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
 
   private $dontMove = ['tid'];
 
-
   /**
    * SimpleABDatabaseData constructor.
    *
    * @param \Drupal\Core\Database\Connection $connection
-   *  connections
+   *   connections.
    * @param \Drupal\Core\State\StateInterface $state
-   *  state
+   *   state.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *  request stack
+   *   request stack.
    */
   public function __construct(Connection $connection, StateInterface $state, RequestStack $request_stack) {
     $this->connection = $connection;
@@ -56,7 +55,8 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
 
       // Return the created tid.
       return $tid;
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
 
       // If error log the exception.
       \Drupal::logger('simple_a_b')->error($e);
@@ -83,7 +83,8 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
 
       // Return the status.
       return $update;
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
 
       // If error log the exception.
       \Drupal::logger('simple_a_b')->error($e);
@@ -105,7 +106,8 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
 
       // Return the status.
       return $status;
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
 
       // If error log the exception.
       \Drupal::logger('simple_a_b')->error($e);
@@ -145,7 +147,7 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
    * @param $data
    *
    * @return array
-   *  New array with keys added in
+   *   New array with keys added in
    */
   private function formatDataForUpload($data) {
     $output = [];
@@ -173,14 +175,13 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
     return $output;
   }
 
-
   /**
-   * Formats the data for use on forms
+   * Formats the data for use on forms.
    *
    * @param $data
    *
    * @return mixed
-   *  Unserialize & put back fields.
+   *   Unserialize & put back fields.
    */
   private function formatDataForDownload($data) {
 
@@ -188,7 +189,6 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
     $data->data = unserialize($data->data);
     $data->settings = unserialize($data->settings);
     $data->conditions = unserialize($data->conditions);
-
 
     // Loop thought all 'data' separating it all back out.
     foreach ($data->data as $key => $value) {

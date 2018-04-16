@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains simple_a_b_blocks.module
+ * Contains simple_a_b_blocks.module.
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -50,7 +50,7 @@ function simple_a_b_blocks_preprocess_block(&$variables) {
       $test_data = \Drupal::service('simple_a_b.storage.data')->fetch($tid);
 
       // Get the content and try and get its value check if is array for input value ckeditor.
-      // TODO: this could be put in its on function as things get more complex
+      // TODO: this could be put in its on function as things get more complex.
       $content = $test_data->content;
       if (is_array($content) && isset($content['value'])) {
         $content = $content['value'];

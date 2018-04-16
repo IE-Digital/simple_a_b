@@ -3,8 +3,7 @@
 namespace Drupal\simple_a_b_reports_google;
 
 /**
- * Defines Report helper to push to Google Analytics
- *
+ * Defines Report helper to push to Google Analytics.
  */
 class SimpleABReportsGoogle {
 
@@ -14,19 +13,18 @@ class SimpleABReportsGoogle {
   private static $sessionId = "simple_a_b_reports_google";
 
   /**
-   * Constant for the report key
+   * Constant for the report key.
    */
   private static $reportKey = "reports";
-
 
   /**
    * Adds an incoming report to the report array.
    *
    * @param array $data
-   *  An array of report data
+   *   An array of report data.
    *
    * @return bool
-   *  returns if the data has been saved
+   *   returns if the data has been saved
    */
   public static function setReport(array $data = []) {
 
@@ -55,7 +53,7 @@ class SimpleABReportsGoogle {
    * Returns all set reports.
    *
    * @return mixed|string
-   *  Returns any data or false/null
+   *   Returns any data or false/null
    */
   public static function getReport() {
 
@@ -75,7 +73,7 @@ class SimpleABReportsGoogle {
    * Sets the report data back to an empty array.
    *
    * @return bool
-   *  Returns status of if everything was removed.
+   *   Returns status of if everything was removed.
    */
   public static function removeAllReports() {
     // Prepare the empty array of data.
@@ -94,10 +92,10 @@ class SimpleABReportsGoogle {
    * Checks if the data is serialize or not and converts it correctly.
    *
    * @param $data
-   *  serialized or non serialized array
+   *   serialized or non serialized array
    *
    * @return mixed|string
-   *  returns back an array or serialized data
+   *   returns back an array or serialized data
    */
   private static function prepareData($data) {
     // Check of serialized data.

@@ -2,10 +2,13 @@
 
 namespace Drupal\simple_a_b;
 
+/**
+ *
+ */
 interface SimpleABStorageInterface {
 
   /**
-   * Add a new test to the database
+   * Add a new test to the database.
    *
    * @param $data
    *
@@ -14,7 +17,7 @@ interface SimpleABStorageInterface {
   public function create($data);
 
   /**
-   * Update an existing test in the database
+   * Update an existing test in the database.
    *
    * @param $tid
    * @param $data
@@ -24,16 +27,17 @@ interface SimpleABStorageInterface {
   public function update($tid, $data);
 
   /**
-   * Remove a test from the database
+   * Remove a test from the database.
    *
-   * @param $tid - test id
+   * @param $tid
+   *   - test id
    *
    * @return mixed
    */
   public function remove($tid);
 
   /**
-   * Pull a test from the database
+   * Pull a test from the database.
    *
    * @param $tid
    *

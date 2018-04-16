@@ -3,7 +3,7 @@
 namespace Drupal\simple_a_b;
 
 /**
- * Custom class to create test for simple_a_b
+ * Custom class to create test for simple_a_b.
  */
 class SimpleAB {
 
@@ -16,7 +16,7 @@ class SimpleAB {
    * @param $test_obj
    *
    * @return bool
-   *  Returns response state
+   *   Returns response state
    */
   public static function calculateExperience($test_obj) {
     // Get the remember state.
@@ -46,15 +46,15 @@ class SimpleAB {
    *
    * Currently this just uses a random number gen this will at some point
    * be updated to be smarter and more useful.
-   * TODO: Make this more smart and useful
+   * TODO: Make this more smart and useful.
    *
    * @param $test_obj
    *
    * @return bool
-   *  Returns true of false
+   *   Returns true of false
    */
   public static function calculateVariation($test_obj) {
-    // otherwise calculate the response data
+    // Otherwise calculate the response data.
     $num = rand(1, 100);
     $response = $num > 49 ? TRUE : FALSE;
 
@@ -62,7 +62,7 @@ class SimpleAB {
   }
 
   /**
-   * Start the process of sending data over to reporting module
+   * Start the process of sending data over to reporting module.
    *
    * @param $test_obj
    * @param $response
@@ -73,7 +73,7 @@ class SimpleAB {
     // Het the status for reporting methods.
     $reportMethod = $simple_a_b_config->get('reporting');
 
-    // If we have a reporting method and that reporting method is not "_none",
+    // If we have a reporting method and that reporting method is not "_none",.
     if ($reportMethod && $reportMethod !== "_none") {
       // Load up the plugin manger.
       $manager = \Drupal::service('plugin.manager.simpleab.report');
@@ -89,13 +89,13 @@ class SimpleAB {
   }
 
   /**
-   * Set the remember state
+   * Set the remember state.
    *
    * @param $obj
    * @param $value
    *
    * @return bool|int
-   *  Returns true/false or -1 if failed
+   *   Returns true/false or -1 if failed
    */
   public static function setRemember($obj, $value) {
     // Load the simple a/b settings.
@@ -122,7 +122,8 @@ class SimpleAB {
         // If cookie, create a new cookie setting the value and lifetime.
         case 'cookie':
           return setcookie($key, $value, $request_time + $lifetime);
-          break;
+
+        break;
       }
     }
 
@@ -131,12 +132,12 @@ class SimpleAB {
   }
 
   /**
-   * Gets a remember state
+   * Gets a remember state.
    *
    * @param $obj
    *
    * @return int
-   *  Returns true/false or -1 if failed
+   *   Returns true/false or -1 if failed
    */
   public static function getRemember($obj) {
     // Load the simple a/b settings.
@@ -151,13 +152,14 @@ class SimpleAB {
       // Create slug key.
       $key = self::slugify($prefix . "-" . $obj->name . "-" . $obj->tid);
 
-      // Switch case on the <ethod
+      // Switch case on the <ethod.
       switch ($rememberMethod) {
 
-        // if cookie, try and get then return the value.
+        // If cookie, try and get then return the value.
         case 'cookie':
           return $_COOKIE[$key];
-          break;
+
+        break;
       }
     }
 
@@ -166,14 +168,14 @@ class SimpleAB {
   }
 
   /**
-   * Slugify method
+   * Slugify method.
    *
-   * https://stackoverflow.com/questions/2955251/php-function-to-make-slug-url-string
+   * Https://stackoverflow.com/questions/2955251/php-function-to-make-slug-url-string.
    *
    * @param $string
    *
    * @return string
-   *  Returns a slugified strring
+   *   Returns a slugified strring
    */
   public static function slugify($string) {
     $string = preg_replace('~[^\pL\d]+~u', '-', $string);
