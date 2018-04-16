@@ -65,9 +65,8 @@ class SimpleABDeleteForm extends ConfirmFormBase {
 
     if (empty($this->loaded_data)) {
       $form = [];
-
-      $messenger = \Drupal::messenger();
-      $messenger->addMessage(t('Error the test could not be found'), 'error');
+      // set error message
+      drupal_set_message(t('Error the test could not be found'),'error');
 
       return $form;
     }
@@ -90,13 +89,11 @@ class SimpleABDeleteForm extends ConfirmFormBase {
     $remove = \Drupal::service('simple_a_b.storage.test')->remove($this->tid);
 
     if ($remove != TRUE) {
-      $messenger = \Drupal::messenger();
-      $messenger->addMessage(t('Error deleting test'), 'error');
+      drupal_set_message(t('Error deleting test'),'error');
     }
     else {
       // otherwise display message
-      $messenger = \Drupal::messenger();
-      $messenger->addMessage(t('"@name" has been removed', ['@name' => $this->loaded_data['name']]), 'status');
+      drupal_set_message(t('"@name" has been removed', ['@name' => $this->loaded_data['name']]), 'status');
 
       // and redirect back to viewing all tests
       $url = Url::fromRoute('simple_a_b.view_tests');

@@ -50,8 +50,7 @@ class SimpleABTestForm extends FormBase {
     // we should stop the form and display an error message
     if ($tid !== NULL && empty($loaded_test)) {
 
-      $messenger = \Drupal::messenger();
-      $messenger->addMessage(t('No test could be found'), 'error');
+      drupal_set_message(t('No test could be found'), 'error');
 
       return $form;
     }
@@ -273,13 +272,11 @@ class SimpleABTestForm extends FormBase {
 
       if ($tid === -1) {
         // if we don't get back a positive tid, display the error message
-        $messenger = \Drupal::messenger();
-        $messenger->addMessage(t('Error creating new test'), 'error');
+        drupal_set_message(t('Error creating new test'), 'error');
       }
       else {
         // otherwise display positive message
-        $messenger = \Drupal::messenger();
-        $messenger->addMessage(t('New test "@name" has been created', ['@name' => $test_data['name']]), 'status');
+        drupal_set_message(t('New test "@name" has been created', ['@name' => $test_data['name']]), 'status');
 
         // and redirect back to viewing all tests
         $url = Url::fromRoute('simple_a_b.view_tests');
@@ -302,13 +299,12 @@ class SimpleABTestForm extends FormBase {
 
       // if status is not true then error
       if ($update != TRUE) {
-        $messenger = \Drupal::messenger();
-        $messenger->addMessage(t('Error updating test'), 'error');
+        drupal_set_message(t('Error updating test'), 'error');
       }
       else {
         // otherwise display positive message
-        $messenger = \Drupal::messenger();
-        $messenger->addMessage(t('"@name" has been updated', ['@name' => $test_data['name']]), 'status');
+        drupal_set_message(t('"@name" has been updated', ['@name' => $test_data['name']]), 'status');
+
 
         // and redirect back to viewing all tests
         $url = Url::fromRoute('simple_a_b.view_tests');
