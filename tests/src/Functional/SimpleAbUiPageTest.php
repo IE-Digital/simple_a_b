@@ -2,34 +2,19 @@
 
 namespace Drupal\Tests\simple_a_b\Functional;
 
-use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests that the Simple A/B UI pages are reachable.
+ * Tests that the Simple A/B UI pages.
  *
  * @group simple_a_b_ui
  */
-class UiPageTest extends BrowserTestBase {
+class SimpleAbUiPageTest extends SimpleAbBrowserTestBase {
 
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  protected static $modules = ['views', 'simple_a_b'];
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setUp() {
-    parent::setUp();
-  }
 
   /**
    * Tests that a/b listing page works.
    */
-  public function testSimpleABListingPage() {
+  public function testSimpleAbListingPage() {
     // Create a user with permission to create ab tests.
     $account = $this->drupalCreateUser(['create ab tests']);
     // Login the drupal user.
@@ -47,7 +32,7 @@ class UiPageTest extends BrowserTestBase {
   /**
    * Tests a/b listing without permission.
    */
-  public function testSimpleABListingPageWithoutPermission() {
+  public function testSimpleAbListingPageWithoutPermission() {
     // Create a user with the wrong permissions to edit settings.
     $account = $this->drupalCreateUser(['configure ab tests']);
     // Login the drupal user.
@@ -62,7 +47,7 @@ class UiPageTest extends BrowserTestBase {
   /**
    * Tests that a/b settings page works.
    */
-  public function testSimpleABSettingsPage() {
+  public function testSimpleAbSettingsPage() {
     // Create a user with permission to configure ab tests.
     $account = $this->drupalCreateUser(['configure ab tests']);
     // Login the drupal user.
@@ -74,19 +59,21 @@ class UiPageTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Check that we can find the view the output on A/B settings.
-    $this->assertSession()->pageTextContains('Settings to configure how simple a/b handles reporting.');
+    $this->assertSession()
+      ->pageTextContains('Settings to configure how simple a/b handles reporting.');
 
     // Try to save the settings config.
     $this->getSession()->getPage()->pressButton('Save configuration');
 
     // Check if we get a response from pressing the save button.
-    $this->assertSession()->pageTextContains('The configuration options have been saved.');
+    $this->assertSession()
+      ->pageTextContains('The configuration options have been saved.');
   }
 
   /**
    * Tests a/b settings without permission.
    */
-  public function testSimpleABSettingsPageWithoutPermission() {
+  public function testSimpleAbSettingsPageWithoutPermission() {
     // Create a user with the wrong permissions to edit settings.
     $account = $this->drupalCreateUser(['create ab tests']);
     // Login the drupal user.
@@ -97,5 +84,28 @@ class UiPageTest extends BrowserTestBase {
     // Check we don't have permission to view the page.
     $this->assertSession()->statusCodeEquals(403);
   }
+
+  //  public function testSimpleAbCreate() {
+  //    // Create a user with permission to create ab tests.
+  //    $account = $this->drupalCreateUser([
+  //      'create ab tests',
+  //      'administer blocks',
+  //    ]);
+  //    // Login the drupal user.
+  //    $this->drupalLogin($account);
+  //
+  //    // Navigate to simple-a-b listing page.
+  //    $this->drupalGet('/admin/config/user-interface/simple-a-b');
+  //
+  //    // Find and click the add custom block button.
+  //    $this->clickLink('create one');
+  //
+  //    $this->fillField('Name', 'Example test');
+  //    $this->fillField('Description', 'An example description');
+  //    $this->fillField('Type', 'block_custom');
+  //    $this->fillField('Entity', 'block 1 (1)');
+  //
+  //    $this->pressButton('Add');
+  //  }
 
 }
