@@ -27,7 +27,7 @@ function simple_a_b_blocks_preprocess_block(&$variables) {
 
   // If we have a block_content block.
   if ($is_block_content) {
-    
+
     // Load the block content.
     $block_content = $variables['content']['#block_content'];
 
