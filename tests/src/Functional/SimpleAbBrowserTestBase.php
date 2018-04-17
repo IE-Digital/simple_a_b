@@ -8,7 +8,7 @@ use Drupal\block_content\Entity\BlockContent;
 /**
  * Base class to make running browser tests easier.
  */
-class SimpleAbBrowserTestBase extends BrowserTestBase {
+abstract class SimpleAbBrowserTestBase extends BrowserTestBase {
 
   /**
    * Modules to enable.
