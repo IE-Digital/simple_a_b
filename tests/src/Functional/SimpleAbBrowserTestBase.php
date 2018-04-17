@@ -5,11 +5,8 @@ namespace Drupal\Tests\simple_a_b\Functional;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\block_content\Entity\BlockContent;
 
-
 /**
  * Base class to make running browser tests easier.
- *
- * @group simple_a_b_ui
  */
 class SimpleAbBrowserTestBase extends BrowserTestBase {
 
