@@ -152,7 +152,7 @@ class SimpleAB {
       // Create slug key.
       $key = self::slugify($prefix . "-" . $obj->name . "-" . $obj->tid);
 
-      // Switch case on the <ethod.
+      // Switch case on the method.
       switch ($rememberMethod) {
 
         // If cookie, try and get then return the value.
