@@ -13,11 +13,6 @@ class SimpleABReportsGoogle {
   private static $sessionId = "simple_a_b_reports_google";
 
   /**
-   * Constant for the report key.
-   */
-  private static $reportKey = "reports";
-
-  /**
    * Adds an incoming report to the report array.
    *
    * @param array $data
@@ -41,9 +36,9 @@ class SimpleABReportsGoogle {
     $array = self::prepareData($array);
 
     // Save the data into session.
-    $tempstore = \Drupal::service('user.private_tempstore')
-      ->get(self::$sessionId);
-    $set = $tempstore->set(self::$reportKey, $array);
+    $request = \Drupal::request();
+    $session = $request->getSession();
+    $set = $session->set(self::$sessionId, $array);
 
     // Return its response.
     return $set;
@@ -58,9 +53,9 @@ class SimpleABReportsGoogle {
   public static function getReport() {
 
     // Load the reports from the session.
-    $tempstore = \Drupal::service('user.private_tempstore')
-      ->get(self::$sessionId);
-    $get = $tempstore->get(self::$reportKey);
+    $request = \Drupal::request();
+    $session = $request->getSession();
+    $get = $session->get(self::$sessionId);
 
     // Clean up the data so it can be read.
     $data = self::prepareData($get);
@@ -80,9 +75,9 @@ class SimpleABReportsGoogle {
     $data = self::prepareData([]);
 
     // Save the data into session.
-    $tempstore = \Drupal::service('user.private_tempstore')
-      ->get(self::$sessionId);
-    $set = $tempstore->set(self::$reportKey, $data);
+    $request = \Drupal::request();
+    $session = $request->getSession();
+    $set = $session->set(self::$sessionId, $data);
 
     // Return the result.
     return $set;
