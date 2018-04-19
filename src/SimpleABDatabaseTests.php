@@ -41,7 +41,7 @@ class SimpleABDatabaseTests implements SimpleABStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function create(array $test_data = [], $data_data = []) {
+  public function create($test_data = [], $data_data = []) {
 
     $user = \Drupal::currentUser();
     $tid = -1;

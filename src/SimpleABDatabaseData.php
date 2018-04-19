@@ -43,7 +43,7 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function create(array $data) {
+  public function create($data) {
 
     $tid = -1;
 

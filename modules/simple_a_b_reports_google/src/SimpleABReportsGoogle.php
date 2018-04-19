@@ -89,13 +89,13 @@ class SimpleABReportsGoogle {
   /**
    * Checks if the data is serialize or not and converts it correctly.
    *
-   * @param array $data
+   * @param object $data
    *   Serialized or non serialized array.
    *
    * @return mixed|string
    *   Returns back an array or serialized data.
    */
-  private static function prepareData(array $data) {
+  private static function prepareData($data) {
     // Check of serialized data.
     $is_serialize = (@unserialize($data) !== FALSE || $data == 'b:0;');
 

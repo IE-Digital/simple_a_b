@@ -48,7 +48,7 @@ class SimpleABTestForm extends FormBase {
 
     // If we have a tid & the data returned is empty,
     // stop the form and display an error message.
-    if ($tid !== NULL && empty($loaded_test)) {
+    if ($tid !== -1 && empty($loaded_test)) {
 
       drupal_set_message(t('No test could be found'), 'error');
 

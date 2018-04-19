@@ -10,13 +10,13 @@ interface SimpleABStorageInterface {
   /**
    * Add a new test to the database.
    *
-   * @param array $data
+   * @param object $data
    *   Pass in array.
    *
    * @return int
    *   Returns the created id.
    */
-  public function create(array $data);
+  public function create($data);
 
   /**
    * Update an existing test in the database.
