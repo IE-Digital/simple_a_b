@@ -7,7 +7,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- *
+ * Simple A/B Google Analytics reporting controller.
  */
 class SimpleABReportsGoogleController extends ControllerBase {
 

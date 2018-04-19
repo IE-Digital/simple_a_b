@@ -2,14 +2,12 @@
 
 namespace Drupal\Tests\simple_a_b\Functional;
 
-
 /**
  * Tests that the Simple A/B UI pages.
  *
  * @group simple_a_b_ui
  */
 class SimpleAbUiPageTest extends SimpleAbBrowserTestBase {
-
 
   /**
    * Tests that a/b listing page works.
@@ -84,28 +82,5 @@ class SimpleAbUiPageTest extends SimpleAbBrowserTestBase {
     // Check we don't have permission to view the page.
     $this->assertSession()->statusCodeEquals(403);
   }
-
-  //  public function testSimpleAbCreate() {
-  //    // Create a user with permission to create ab tests.
-  //    $account = $this->drupalCreateUser([
-  //      'create ab tests',
-  //      'administer blocks',
-  //    ]);
-  //    // Login the drupal user.
-  //    $this->drupalLogin($account);
-  //
-  //    // Navigate to simple-a-b listing page.
-  //    $this->drupalGet('/admin/config/user-interface/simple-a-b');
-  //
-  //    // Find and click the add custom block button.
-  //    $this->clickLink('create one');
-  //
-  //    $this->fillField('Name', 'Example test');
-  //    $this->fillField('Description', 'An example description');
-  //    $this->fillField('Type', 'block_custom');
-  //    $this->fillField('Entity', 'block 1 (1)');
-  //
-  //    $this->pressButton('Add');
-  //  }
 
 }

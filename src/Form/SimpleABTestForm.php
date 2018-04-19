@@ -33,20 +33,21 @@ class SimpleABTestForm extends FormBase {
    *   An associative array containing the structure of the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
-   * @param null $tid
+   * @param int $tid
    *   A tid used for edits.
    *
    * @return array
    *   The form structure.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $tid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $tid = -1) {
 
     // Try to load the tid.
     $loaded_test = static::loadTestData($tid);
     // This is used for if we are using the form in edit mode.
     $edit_mode = isset($loaded_test['name']) ? TRUE : FALSE;
 
-    // If we have a tid & the data returned is empty, stop the form and display an error message.
+    // If we have a tid & the data returned is empty,
+    // stop the form and display an error message.
     if ($tid !== NULL && empty($loaded_test)) {
 
       drupal_set_message(t('No test could be found'), 'error');
@@ -55,7 +56,7 @@ class SimpleABTestForm extends FormBase {
     }
 
     if (empty($form_state->getValue($this->fieldTestPrepend . 'type'))) {
-      $test_type = $this->_isset($loaded_test['type']);
+      $test_type = $this->simpleAbIsset($loaded_test['type']);
     }
     else {
       $test_type = $form_state->getValue($this->fieldTestPrepend . 'type');
@@ -74,7 +75,7 @@ class SimpleABTestForm extends FormBase {
       '#type' => 'textfield',
       '#title' => t('Name'),
       '#description' => t('Administrative name'),
-      '#default_value' => $this->_isset($loaded_test['name']),
+      '#default_value' => $this->simpleAbIsset($loaded_test['name']),
       '#required' => TRUE,
     ];
 
@@ -82,7 +83,7 @@ class SimpleABTestForm extends FormBase {
     $form['test'][$this->fieldTestPrepend . 'description'] = [
       '#type' => 'textfield',
       '#title' => t('Description'),
-      '#default_value' => $this->_isset($loaded_test['description']),
+      '#default_value' => $this->simpleAbIsset($loaded_test['description']),
       '#description' => t('Administrative description'),
     ];
 
@@ -120,7 +121,7 @@ class SimpleABTestForm extends FormBase {
       '#title' => t('Entity'),
       '#target_type' => static::getEntityType($test_type),
       '#description' => static::getEntityDescription($test_type),
-      '#default_value' => BlockContent::load($this->_isset($loaded_test['eid'], 0)),
+      '#default_value' => BlockContent::load($this->simpleAbIsset($loaded_test['eid'], 0)),
       '#disabled' => static::getEntityDisabledState($test_type),
       '#required' => TRUE,
     ];
@@ -130,7 +131,7 @@ class SimpleABTestForm extends FormBase {
       '#type' => 'radios',
       '#title' => t('Enabled'),
       '#description' => t('Enable or disable this test'),
-      '#default_value' => $this->_isset($loaded_test['enabled'], 0),
+      '#default_value' => $this->simpleAbIsset($loaded_test['enabled'], 0),
       '#options' => [
         1 => t('Yes'),
         0 => t('No'),
@@ -152,31 +153,31 @@ class SimpleABTestForm extends FormBase {
       '#format' => 'full_html',
       '#title' => t('Replacement content'),
       '#description' => t('This will be the content that replaces the original content'),
-      '#default_value' => $this->_isset($loaded_test['content']['value']),
+      '#default_value' => $this->simpleAbIsset($loaded_test['content']['value']),
     ];
 
     // $form['extra-tabs'] = [
-    //      '#type' => 'vertical_tabs',
-    //      '#default_tab' => 'edit-publication',
-    //    ];
+    // '#type' => 'vertical_tabs',
+    // '#default_tab' => 'edit-publication',
+    // ];
     //
-    //    $form['conditions'] = [
-    //      '#type' => 'details',
-    //      '#title' => $this->t('Conditions'),
-    //      '#group' => 'extra-tabs',
-    //    ];
+    // $form['conditions'] = [
+    // '#type' => 'details',
+    // '#title' => $this->t('Conditions'),
+    // '#group' => 'extra-tabs',
+    // ];
     //
-    //    $form['reports'] = [
-    //      '#type' => 'details',
-    //      '#title' => $this->t('Reporting'),
-    //      '#group' => 'extra-tabs',
-    //    ];
+    // $form['reports'] = [
+    // '#type' => 'details',
+    // '#title' => $this->t('Reporting'),
+    // '#group' => 'extra-tabs',
+    // ];
     //
-    //    $form['settings'] = [
-    //      '#type' => 'details',
-    //      '#title' => $this->t('Settings'),
-    //      '#group' => 'extra-tabs',
-    //    ];.
+    // $form['settings'] = [
+    // '#type' => 'details',
+    // '#title' => $this->t('Settings'),
+    // '#group' => 'extra-tabs',
+    // ];.
     // Place to hold the actions.
     $form['actions'] = ['#type' => 'actions'];
 
@@ -188,9 +189,9 @@ class SimpleABTestForm extends FormBase {
     ];
 
     // $form['actions']['preview'] = [
-    //      '#type' => 'submit',
-    //      '#value' => t('Preview'),
-    //    ];.
+    // '#type' => 'submit',
+    // '#value' => t('Preview'),
+    // ];.
     // If edit mode enabled.
     if ($edit_mode) {
 
@@ -203,13 +204,13 @@ class SimpleABTestForm extends FormBase {
       // Hidden field for the tid.
       $form[$this->fieldTestPrepend . 'tid'] = [
         '#type' => 'hidden',
-        '#value' => $this->_isset($loaded_test['tid']),
+        '#value' => $this->simpleAbIsset($loaded_test['tid']),
       ];
 
       // Hidden field for the did.
       $form[$this->fieldDataPrepend . 'did'] = [
         '#type' => 'hidden',
-        '#value' => $this->_isset($loaded_test['did']),
+        '#value' => $this->simpleAbIsset($loaded_test['did']),
       ];
     }
 
@@ -308,7 +309,9 @@ class SimpleABTestForm extends FormBase {
    * Loads in the correct entity selector based upon the type selected.
    *
    * @param array $form
+   *   Array form object.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Array form state object.
    *
    * @return mixed
    *   Returns an entity collector.
@@ -320,23 +323,25 @@ class SimpleABTestForm extends FormBase {
   /**
    * Load a tests information used for amending edits.
    *
-   * @param null $tid
+   * @param int $tid
+   *   Optional int to load test id.
    *
    * @return array
    *   Loads information about a test.
    */
-  protected static function loadTestData($tid = NULL) {
+  protected static function loadTestData($tid = -1) {
     $output = [];
 
     // If there is no tid, then simply return empty array.
-    if ($tid === NULL) {
+    if ($tid === -1) {
       return $output;
     }
 
     // Run a fetch looking up the test id.
     $tests = \Drupal::service('simple_a_b.storage.data')->fetch($tid);
 
-    // If we find any tests, set it to the output after converting it to an array.
+    // If we find any tests,
+    // set it to the output after converting it to an array.
     if (count($tests) > 0) {
       // There should only be one found.
       $output = (array) $tests;
@@ -388,7 +393,8 @@ class SimpleABTestForm extends FormBase {
   /**
    * Returns the selected entity type.
    *
-   * @param $type
+   * @param string $type
+   *   Request for the type of entity.
    *
    * @return string
    *   returns back the entity type for the collection field
@@ -414,9 +420,11 @@ class SimpleABTestForm extends FormBase {
   /**
    * Returns the entity description.
    *
-   * @param $type
+   * @param string $type
+   *   Request for the entity Description.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   Returns some translatable string.
    */
   protected static function getEntityDescription($type) {
     $manager = \Drupal::service('plugin.manager.simpleab.type');
@@ -440,7 +448,8 @@ class SimpleABTestForm extends FormBase {
   /**
    * Returns if the entity field is disabled or not.
    *
-   * @param $type
+   * @param string $type
+   *   The current entity stype.
    *
    * @return bool
    *   Returns if the entity is disabled
@@ -458,13 +467,15 @@ class SimpleABTestForm extends FormBase {
   /**
    * A simple wrapper for isset to make it shorter to test.
    *
-   * @param $value
+   * @param string $value
+   *   The value to check if isset.
    * @param string $default_response
+   *   A default response if not set.
    *
    * @return string
    *   returns a value or default response
    */
-  private function _isset(&$value, $default_response = '') {
+  private function simpleAbIsset(&$value, $default_response = '') {
     return isset($value) ? $value : $default_response;
   }
 

@@ -104,23 +104,25 @@ class SimpleABDeleteForm extends ConfirmFormBase {
   /**
    * Load a tests information used for amending edits.
    *
-   * @param null $tid
+   * @param int $tid
+   *   Optional tid int to get data.
    *
    * @return array
    *   Returns an empty or data full array
    */
-  protected function loadData($tid = NULL) {
+  protected function loadData($tid = -1) {
     $output = [];
 
     // If there is no tid, then simply return empty array.
-    if ($tid === NULL) {
+    if ($tid === -1) {
       return $output;
     }
 
     // Otherwise run a fetch looking up the test id.
     $tests = \Drupal::service('simple_a_b.storage.test')->fetch($tid);
 
-    // If we find any tests, set it to the output after converting it to an array.
+    // If we find any tests,
+    // set it to the output after converting it to an array.
     if (count($tests) > 0) {
       foreach ($tests as $test) {
         // There should only be one found.

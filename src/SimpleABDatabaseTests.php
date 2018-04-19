@@ -8,7 +8,7 @@ use Drupal\Core\State\StateInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- *
+ * Makes changes to the simple a/b tests table.
  */
 class SimpleABDatabaseTests implements SimpleABStorageInterface {
 
@@ -18,16 +18,19 @@ class SimpleABDatabaseTests implements SimpleABStorageInterface {
 
   protected $requestStack;
 
-  private $_table = 'simple_a_b_tests';
+  private $table = 'simple_a_b_tests';
 
-  private $_viewCache = 'config:views.view.simple_a_b_tests';
+  private $viewCache = 'config:views.view.simple_a_b_tests';
 
   /**
    * SimpleABDatabaseTests constructor.
    *
    * @param \Drupal\Core\Database\Connection $connection
+   *   Connection.
    * @param \Drupal\Core\State\StateInterface $state
+   *   State.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   Request_stack.
    */
   public function __construct(Connection $connection, StateInterface $state, RequestStack $request_stack) {
     $this->connection = $connection;
@@ -38,7 +41,7 @@ class SimpleABDatabaseTests implements SimpleABStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function create($test_data = [], $data_data = []) {
+  public function create(array $test_data = [], $data_data = []) {
 
     $user = \Drupal::currentUser();
     $tid = -1;
@@ -51,7 +54,7 @@ class SimpleABDatabaseTests implements SimpleABStorageInterface {
 
     try {
       // Try to add the data into the database.
-      $tid = $this->connection->insert($this->_table)
+      $tid = $this->connection->insert($this->table)
         ->fields($test_data)
         ->execute();
 
@@ -64,7 +67,7 @@ class SimpleABDatabaseTests implements SimpleABStorageInterface {
 
       // Invalidate the views cache
       // so that the view will show that something has been added.
-      Cache::invalidateTags([$this->_viewCache]);
+      Cache::invalidateTags([$this->viewCache]);
 
       // Set the tid.
       $data_data['tid'] = $tid;
@@ -103,7 +106,7 @@ class SimpleABDatabaseTests implements SimpleABStorageInterface {
 
     try {
       // Try to update based upon the tid.
-      $update = $this->connection->update($this->_table)
+      $update = $this->connection->update($this->table)
         ->fields($test_data)
         ->condition('tid', $tid, "=")
         ->execute();
@@ -117,7 +120,7 @@ class SimpleABDatabaseTests implements SimpleABStorageInterface {
 
       // Invalidate the views cache
       // so that the view will show that something has been updated.
-      Cache::invalidateTags([$this->_viewCache]);
+      Cache::invalidateTags([$this->viewCache]);
 
       // Update the data from data table.
       \Drupal::service('simple_a_b.storage.data')->update($did, $data_data);
@@ -146,12 +149,13 @@ class SimpleABDatabaseTests implements SimpleABStorageInterface {
 
       // Fetch the data so we can update the config data
       // this helps to keep track of all the enabled / disabled modules
-      // in this case it will always make sure we remove the deleted data from the config.
+      // in this case it will always make sure we
+      // remove the deleted data from the config.
       $test = $this->fetch($tid);
       $this->updateConfig($test->type, $tid, $test->eid, FALSE);
 
       // Try to delete the test.
-      $status = $this->connection->delete($this->_table)
+      $status = $this->connection->delete($this->table)
         ->condition('tid', $tid)
         ->execute();
 
@@ -163,7 +167,7 @@ class SimpleABDatabaseTests implements SimpleABStorageInterface {
 
       // Invalidate the views cache
       // so that the view will show that something has been removed.
-      Cache::invalidateTags([$this->_viewCache]);
+      Cache::invalidateTags([$this->viewCache]);
 
       // Remove the data from data table.
       \Drupal::service('simple_a_b.storage.data')->remove($tid);
@@ -184,7 +188,7 @@ class SimpleABDatabaseTests implements SimpleABStorageInterface {
    */
   public function fetch($tid) {
 
-    $test = $this->connection->select($this->_table, 't')
+    $test = $this->connection->select($this->table, 't')
       ->fields('t', ['tid', 'name', 'description', 'enabled', 'type', 'eid'])
       ->condition('t.tid', $tid, '=')
       ->range(0, 1)
@@ -194,10 +198,16 @@ class SimpleABDatabaseTests implements SimpleABStorageInterface {
   }
 
   /**
-   * @param $name
-   * @param $tid
-   * @param $eid
-   * @param $enabled
+   * Updates the config.
+   *
+   * @param string $name
+   *   Name of the test.
+   * @param int $tid
+   *   Tid of the test.
+   * @param int $eid
+   *   Eid of the test.
+   * @param bool $enabled
+   *   Enabled state of the test.
    */
   private function updateConfig($name, $tid, $eid, $enabled) {
 

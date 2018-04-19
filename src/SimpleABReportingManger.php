@@ -7,14 +7,11 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
- * .
- *
  * SimpleAB Reporting plugin manager.
  */
 class SimpleABReportingManger extends DefaultPluginManager {
+
   /**
-   * .
-   *
    * Constructs an SimpleABReportingManger object.
    *
    * @param \Traversable $namespaces
@@ -24,10 +21,6 @@ class SimpleABReportingManger extends DefaultPluginManager {
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
-   */
-
-  /**
-   *
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     parent::__construct('Plugin/SimpleABReport', $namespaces, $module_handler, 'Drupal\simple_a_b\SimpleABReportingInterface', 'Drupal\simple_a_b\Annotation\SimpleABReport');

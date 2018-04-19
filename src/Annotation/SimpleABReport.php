@@ -9,7 +9,7 @@ use Drupal\Component\Annotation\Plugin;
  *
  * Plugin Namespace: Plugin\simple_a_b\SimpleABReport.
  *
- * @see \Drupal\simple_a_b\Plugin\SimpleABReportManger
+ * @see \Drupal\simple_a_b\SimpleABReportManger
  * @see plugin_api
  *
  * @Annotation

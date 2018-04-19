@@ -71,8 +71,8 @@
      */
     function callGA(eventCategory, eventAction, eventLabel, eventValue)
     {
-      // just another check for ga - as maybe someone calls it from outside this methid
-      // if found then lets use it! send away to google!
+      // just another check for ga - as maybe someone calls it from outside
+      // this methid if found then lets use it! send away to google!
       if (typeof ga === "function") {
         ga("send", "event", eventCategory, eventAction, eventLabel, eventValue);
       }

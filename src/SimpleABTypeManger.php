@@ -7,14 +7,11 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
- * .
- *
  * SimpleAB Entity test plugin manager.
  */
 class SimpleABTypeManger extends DefaultPluginManager {
+
   /**
-   * .
-   *
    * Constructs an SimpleABTypeManger object.
    *
    * @param \Traversable $namespaces
@@ -24,10 +21,6 @@ class SimpleABTypeManger extends DefaultPluginManager {
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
-   */
-
-  /**
-   *
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     parent::__construct('Plugin/SimpleABType', $namespaces, $module_handler, 'Drupal\simple_a_b\SimpleABTypeInterface', 'Drupal\simple_a_b\Annotation\SimpleABType');

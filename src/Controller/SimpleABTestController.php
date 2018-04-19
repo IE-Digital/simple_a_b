@@ -18,8 +18,9 @@ class SimpleABTestController extends ControllerBase {
    * attached too.
    *
    * @return array
+   *   Returns the output of display.
    */
-  public function simple_a_b_view_tests() {
+  public function createViewTestsPage() {
 
     $output = [];
 

@@ -9,7 +9,7 @@ use Drupal\Component\Annotation\Plugin;
  *
  * Plugin Namespace: Plugin\simple_a_b\SimpleABType.
  *
- * @see \Drupal\simple_a_b\Plugin\SimpleABTypeManger
+ * @see \Drupal\simple_a_b\SimpleABTypeManger
  * @see plugin_api
  *
  * @Annotation

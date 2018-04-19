@@ -13,7 +13,8 @@ class SimpleAB {
    * If cookies are set we make sure we only show the
    * same one for the set amount of time.
    *
-   * @param $test_obj
+   * @param object $test_obj
+   *   The test object data.
    *
    * @return bool
    *   Returns response state
@@ -48,7 +49,8 @@ class SimpleAB {
    * be updated to be smarter and more useful.
    * TODO: Make this more smart and useful.
    *
-   * @param $test_obj
+   * @param object $test_obj
+   *   The test object data.
    *
    * @return bool
    *   Returns true of false
@@ -64,8 +66,10 @@ class SimpleAB {
   /**
    * Start the process of sending data over to reporting module.
    *
-   * @param $test_obj
-   * @param $response
+   * @param object $test_obj
+   *   The test object data.
+   * @param bool $response
+   *   The response of the variation.
    */
   public static function report($test_obj, $response) {
     // Load the simple a/b settings.
@@ -91,8 +95,10 @@ class SimpleAB {
   /**
    * Set the remember state.
    *
-   * @param $obj
-   * @param $value
+   * @param object $obj
+   *   The test object data.
+   * @param bool $value
+   *   The response of the variation.
    *
    * @return bool|int
    *   Returns true/false or -1 if failed
@@ -122,8 +128,6 @@ class SimpleAB {
         // If cookie, create a new cookie setting the value and lifetime.
         case 'cookie':
           return setcookie($key, $value, $request_time + $lifetime);
-
-        break;
       }
     }
 
@@ -134,7 +138,8 @@ class SimpleAB {
   /**
    * Gets a remember state.
    *
-   * @param $obj
+   * @param object $obj
+   *   The test object data.
    *
    * @return int
    *   Returns true/false or -1 if failed
@@ -158,8 +163,6 @@ class SimpleAB {
         // If cookie, try and get then return the value.
         case 'cookie':
           return $_COOKIE[$key];
-
-        break;
       }
     }
 
@@ -172,7 +175,8 @@ class SimpleAB {
    *
    * Https://stackoverflow.com/questions/2955251/php-function-to-make-slug-url-string.
    *
-   * @param $string
+   * @param string $string
+   *   The string to be slugify.
    *
    * @return string
    *   Returns a slugified strring

@@ -28,11 +28,11 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
    * SimpleABDatabaseData constructor.
    *
    * @param \Drupal\Core\Database\Connection $connection
-   *   connections.
+   *   Connections.
    * @param \Drupal\Core\State\StateInterface $state
-   *   state.
+   *   State.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   request stack.
+   *   Request stack.
    */
   public function __construct(Connection $connection, StateInterface $state, RequestStack $request_stack) {
     $this->connection = $connection;
@@ -43,7 +43,7 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function create($data) {
+  public function create(array $data) {
 
     $tid = -1;
 
@@ -144,7 +144,8 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
   /**
    * Format the data for upload to the database.
    *
-   * @param $data
+   * @param object $data
+   *   Array of data.
    *
    * @return array
    *   New array with keys added in
@@ -178,7 +179,8 @@ class SimpleABDatabaseData implements SimpleABStorageInterface {
   /**
    * Formats the data for use on forms.
    *
-   * @param $data
+   * @param object $data
+   *   Object of data.
    *
    * @return mixed
    *   Unserialize & put back fields.

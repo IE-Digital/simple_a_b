@@ -9,6 +9,8 @@ class SimpleABReportsGoogle {
 
   /**
    * Constant for the session id.
+   *
+   * @var string
    */
   private static $sessionId = "simple_a_b_reports_google";
 
@@ -23,7 +25,8 @@ class SimpleABReportsGoogle {
    */
   public static function setReport(array $data = []) {
 
-    // Load up any already set reports, if we cannot find any create an empty array.
+    // Load up any already set reports, if we cannot find
+    // any create an empty array.
     $array = self::getReport();
     if (!$array || !is_array($array)) {
       $array = [];
@@ -86,13 +89,13 @@ class SimpleABReportsGoogle {
   /**
    * Checks if the data is serialize or not and converts it correctly.
    *
-   * @param $data
-   *   serialized or non serialized array
+   * @param array $data
+   *   Serialized or non serialized array.
    *
    * @return mixed|string
-   *   returns back an array or serialized data
+   *   Returns back an array or serialized data.
    */
-  private static function prepareData($data) {
+  private static function prepareData(array $data) {
     // Check of serialized data.
     $is_serialize = (@unserialize($data) !== FALSE || $data == 'b:0;');
 

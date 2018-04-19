@@ -24,11 +24,11 @@ class SimpleABDatabaseConfig implements SimpleABStorageInterface {
    * SimpleABDatabaseConfig constructor.
    *
    * @param \Drupal\Core\Database\Connection $connection
-   *   connections.
+   *   Connections.
    * @param \Drupal\Core\State\StateInterface $state
-   *   state.
+   *   State.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   request stack.
+   *   Request stack.
    */
   public function __construct(Connection $connection, StateInterface $state, RequestStack $request_stack) {
     $this->connection = $connection;
@@ -129,7 +129,8 @@ class SimpleABDatabaseConfig implements SimpleABStorageInterface {
   /**
    * Formats the data for use on forms.
    *
-   * @param $data
+   * @param object $data
+   *   Data to be unserialize.
    *
    * @return mixed
    *   returns unserialize data

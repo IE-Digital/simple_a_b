@@ -2,7 +2,7 @@ simple_a_b.view_tests:
   path: '/admin/config/user-interface/simple-a-b'
   defaults:
     _title: 'Simple A/B Tests'
-    _controller: 'Drupal\simple_a_b\Controller\SimpleABTestController::simple_a_b_view_tests'
+    _controller: 'Drupal\simple_a_b\Controller\SimpleABTestController::createViewTestsPage'
   requirements:
     _permission: 'create ab tests'
 
