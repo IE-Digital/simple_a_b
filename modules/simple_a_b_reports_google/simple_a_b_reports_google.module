@@ -62,5 +62,8 @@ function _simple_a_b_reports_google_prepare_event_data($test_obj, $response) {
   $output['eventValue'] = $test_obj->tid;
   $output['timeStamp'] = date('c');
 
+  // TODO: This field should be dynamic and pull in from somewhere
+  $output['nonInteraction'] = true;
+
   return $output;
 }

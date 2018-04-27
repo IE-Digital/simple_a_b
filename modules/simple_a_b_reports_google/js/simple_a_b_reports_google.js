@@ -7,8 +7,7 @@
     /**
      * init
      */
-    function init()
-    {
+    function init() {
       getReports();
     }
 
@@ -17,14 +16,14 @@
      * One the page has load we can
      * request any report data from the reporter
      */
-    function getReports()
-    {
+    function getReports() {
       // make an ajax call to get any report data
       $a.ajax({
         url: "/request/simple_a_b/get/reports",
         method: 'GET',
         dataType: "json",
         success: function (reports) {
+          console.log(reports);
           // if we have some reports & reports has a count of 0 or greater
           if (typeof reports.reports !== 'undefined' && reports.reports.length !== 0) {
             processReportData(reports.reports);
@@ -38,13 +37,12 @@
      *
      * @param data
      */
-    function processReportData(data)
-    {
+    function processReportData(data) {
       // if we can find ga
       // lets look though and send over the data to be sent to google
       if (typeof ga === "function") {
         $.each(data, function (key, report) {
-          callGA(report.eventCategory, report.eventAction, report.eventLabel, report.eventValue);
+          callGA(report.eventCategory, report.eventAction, report.eventLabel, report.eventValue, report.nonInteraction);
         });
       }
       else {
@@ -68,13 +66,18 @@
      * @param eventAction
      * @param eventLabel
      * @param eventValue
+     * @param nonInteraction
      */
-    function callGA(eventCategory, eventAction, eventLabel, eventValue)
-    {
+    function callGA(eventCategory, eventAction, eventLabel, eventValue, nonInteraction) {
+      // Flag for non interaction, defaults to true
+      nonInteraction = typeof nonInteraction !== 'undefined' ? nonInteraction : true;
+
       // just another check for ga - as maybe someone calls it from outside
       // this methid if found then lets use it! send away to google!
       if (typeof ga === "function") {
-        ga("send", "event", eventCategory, eventAction, eventLabel, eventValue);
+        ga("send", "event", eventCategory, eventAction, eventLabel, eventValue, {
+          nonInteraction: nonInteraction
+        });
       }
       else {
         console.error('Simple a/b - Cannot call "ga" method');
