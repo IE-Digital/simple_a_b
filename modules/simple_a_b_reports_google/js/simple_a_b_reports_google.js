@@ -23,7 +23,6 @@
         method: 'GET',
         dataType: "json",
         success: function (reports) {
-          console.log(reports);
           // if we have some reports & reports has a count of 0 or greater
           if (typeof reports.reports !== 'undefined' && reports.reports.length !== 0) {
             processReportData(reports.reports);
